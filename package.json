@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dinasing/cinema-server/issues"
   },
-  "homepage": "https://github.com/dinasing/cinema-server#readme"
+  "homepage": "https://github.com/dinasing/cinema-server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
