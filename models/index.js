@@ -9,3 +9,4 @@ export const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.cinema = createModel(sequelize, Sequelize);
+db.sequelize.sync();

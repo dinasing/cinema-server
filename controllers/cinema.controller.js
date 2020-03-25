@@ -34,7 +34,17 @@ exports.findAll = (req, res) => {
 
 // Find a single Cinema with an id
 exports.findOne = (req, res) => {
-  
+    const id = req.params.id;
+
+    Cinema.findByPk(id)
+    .then(record => {
+      res.send(record);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving Cinema with id =" + id
+      });
+    });
 };
 
 // Update a Cinema by the id in the request
