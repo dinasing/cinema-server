@@ -14,5 +14,3 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-
-//  default app;
