@@ -49,7 +49,27 @@ exports.findOne = (req, res) => {
 
 // Update a Cinema by the id in the request
 exports.update = (req, res) => {
-  
+    const id = req.params.id;
+
+    Cinema.update(req.body, {
+        where: { id: id }
+    })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Cinema was updated successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot update Cinema with id = ${id}. Maybe Cinema was not found or req.body is empty!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating Cinema with id =" + id
+      });
+    });
 };
 
 // Delete a Cinema with the specified id in the request
