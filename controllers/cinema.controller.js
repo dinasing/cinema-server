@@ -73,8 +73,28 @@ exports.update = (req, res) => {
 };
 
 // Delete a Cinema with the specified id in the request
-exports.delete = (req, res) => {
-  
+exports.deleteOne = (req, res) => {
+    const id = req.params.id;
+
+    Cinema.destroy({
+      where: { id: id }
+    })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Cinema was deleted successfully!"
+        });
+      } else {
+        res.send({
+          message: `Cannot delete Cinema with id = ${id}. Maybe Cinema was not found!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete Cinema with id = " + id
+      });
+    });
 };
 
 // Delete all Cinemas from the database.
