@@ -1,4 +1,4 @@
-const passport    = require('passport');
+const passport = require('passport');
 const passportJWT = require("passport-jwt");
 import { db } from './models/index'
 const User = db.user;
@@ -6,14 +6,14 @@ const User = db.user;
 const ExtractJWT = passportJWT.ExtractJwt;
 
 const LocalStrategy = require('passport-local').Strategy;
-const JWTStrategy   = passportJWT.Strategy;
+const JWTStrategy = passportJWT.Strategy;
 
 passport.use(new LocalStrategy({
-        usernameField: 'login',
+        usernameField: 'username',
         passwordField: 'password'
     },
-    function (login, password, cb) {
-        return User.findOne({login, password})
+    function (username, password, cb) {
+        return User.findOne({ where: {username, password} })
           .then(user => JSON.parse(JSON.stringify(user)))
           .then(user => {
               if (!user) {
