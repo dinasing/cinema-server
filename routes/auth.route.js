@@ -6,7 +6,6 @@ const passport = require('passport');
 router.post('/login', function (req, res, next) {
 
     passport.authenticate('local', {session: false}, (err, user, info) => {
-        console.log(err);
         if (err || !user) {
             return res.status(400).json({
                 message: info 
