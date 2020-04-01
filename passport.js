@@ -1,48 +1,58 @@
-const passport = require('passport');
+const passport = require("passport");
 const passportJWT = require("passport-jwt");
-import { db } from './models/index'
+const bcrypt = require("bcryptjs");
+import { db } from "./models/index";
 const User = db.user;
 
 const ExtractJWT = passportJWT.ExtractJwt;
 
-const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 const JWTStrategy = passportJWT.Strategy;
 
-passport.use(new LocalStrategy({
-        usernameField: 'username',
-        passwordField: 'password'
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password"
     },
-    function (username, password, cb) {
-        return User.findOne({ where: {username, password} })
-          .then(user => JSON.parse(JSON.stringify(user)))
-          .then(user => {
-              if (!user) {
-                  return cb(null, false, {message: 'Incorrect email or password.'});
-              }
-
-              return cb(null, user, {
-                  message: 'Logged In Successfully'
-              });
-          })
-          .catch(err => {
-              return cb(err);
-          });
-    }
-));
-
-passport.use(new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey: 'jwt_secret'
-    },
-    function (jwtPayload, cb) {
-      console.log(jwtPayload.id);
-      
-        return User.findByPk(jwtPayload.id)
-            .then(user => {
-                return cb(null, user);
-            })
-            .catch(err => {
-                return cb(err);
+    function(email, password, cb) {
+      return User.findOne({ where: { email } })
+        .then(user => {
+          return JSON.parse(JSON.stringify(user));
+        })
+        .then(user => {
+          if (!user || !bcrypt.compareSync(password, user.password)) {
+            return cb(null, false, {
+              message: "Incorrect email or password."
             });
+          } else
+            return cb(null, user, {
+              message: "Logged In Successfully"
+            });
+        })
+        .catch(err => {
+          return cb(err);
+        });
     }
-));
+  )
+);
+
+passport.use(
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      secretOrKey: "jwt_secret"
+    },
+    function(jwtPayload, cb) {
+      console.log(jwtPayload.id);
+
+      return User.findByPk(jwtPayload.id)
+        .then(user => {
+          return cb(null, user);
+        })
+        .catch(err => {
+          return cb(err);
+        });
+    }
+  )
+);
