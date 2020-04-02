@@ -1,9 +1,9 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
+import config from "config";
+import { createModel as createCinemaModel } from "./cinema.model";
+import { createModel as createUserModel } from "./user.model";
 
-import { createModel as createCinemaModel} from './cinema.model';
-import { createModel as createUserModel} from './user.model';
-
-const sequelize = new Sequelize('postgres://postgres:1@localhost:5432/cinema');
+const sequelize = new Sequelize(config.get("postgresURI"));
 
 export const db = {};
 

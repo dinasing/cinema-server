@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
+import config from "config";
 import { create } from "../controllers/user.controller.js";
 
 router.post("/login", function(req, res, next) {
@@ -18,7 +19,7 @@ router.post("/login", function(req, res, next) {
         res.send(err);
       }
 
-      const token = jwt.sign(user, "jwt_secret");
+      const token = jwt.sign(user, config.get("jwtSecret"));
 
       return res.json({ user, token });
     });

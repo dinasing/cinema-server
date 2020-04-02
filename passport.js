@@ -1,6 +1,7 @@
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
 const bcrypt = require("bcryptjs");
+import config from "config";
 import { db } from "./models/index";
 const User = db.user;
 
@@ -41,7 +42,7 @@ passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-      secretOrKey: "jwt_secret"
+      secretOrKey: config.get("jwtSecret")
     },
     function(jwtPayload, cb) {
       console.log(jwtPayload.id);
