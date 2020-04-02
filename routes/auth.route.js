@@ -9,7 +9,7 @@ router.post("/login", function(req, res, next) {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err || !user) {
       return res.status(400).json({
-        message: info ? info.message : "Login failed",
+        msg: info ? info.message : "Login failed",
         user: user
       });
     }

@@ -1,21 +1,22 @@
 import { db } from "../models/index.js";
 const User = db.user;
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 
 // Create and Save a new User
 export function create(req, res) {
-  if (!req.body.email) {
+  const { firstName, lastName, email, password } = req.body;
+  if (!email || !firstName || !lastName || !password) {
     res.status(400).send({
-      message: "Content can not be empty!"
+      msg: "Please enter all fields!"
     });
     return;
   }
 
-  bcrypt.hash(req.body.password, 3, function(err, hash) {
+  bcrypt.hash(password, 3, function(err, hash) {
     const user = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
+      firstName,
+      lastName,
+      email,
       password: hash,
       roleId: req.body.roleId
     };
@@ -25,7 +26,7 @@ export function create(req, res) {
       })
       .catch(err => {
         res.status(500).send({
-          message: err.message || "Some error occurred while adding user."
+          msg: err.message || "Some error occurred while adding user."
         });
       });
   });
