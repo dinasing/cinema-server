@@ -1,13 +1,19 @@
-import { Router } from 'express';
+import { Router } from "express";
 let router = Router();
 
-import { create, findOne, update, deleteOne } from "../controllers/cinema.controller.js";
+import {
+  create,
+  findOne,
+  update,
+  deleteOne,
+  findAll,
+} from "../controllers/cinema.controller.js";
 
 // Create a new Cinema
 router.post("/", create);
 
-// // Retrieve all Cinemas
-// router.get("/", Cinemas.findAll);
+// Retrieve all Cinemas
+router.get("/", findAll);
 
 // Retrieve a single Cinema with id
 router.get("/:id", findOne);
@@ -20,5 +26,5 @@ router.delete("/:id", deleteOne);
 
 // // Create a new Cinema
 // router.delete("/", Cinemas.deleteAll);
-  
+
 export default router;
