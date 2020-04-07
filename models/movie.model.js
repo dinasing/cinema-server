@@ -32,5 +32,6 @@ export function createModel(db, Sequelize) {
       type: Sequelize.TEXT,
     },
   });
+
   return Movies;
 }
