@@ -10,8 +10,24 @@ export function create(req, res) {
     return;
   }
 
-  const { movie } = req.body;
-
+  const {
+    title,
+    genre,
+    release_date,
+    end_date,
+    language,
+    description,
+    poster,
+  } = req.body;
+  const movie = {
+    title,
+    genre,
+    release_date,
+    end_date,
+    language,
+    description,
+    poster,
+  };
   Movie.create(movie)
     .then((record) => {
       res.send(record);
