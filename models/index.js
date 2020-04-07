@@ -48,6 +48,7 @@ db.movieTime.belongsTo(db.movie, {
 db.movieTime.belongsTo(db.cinemaHall, {
   foreignKey: {
     allowNull: false,
+    primaryKey: true,
   },
 });
 
