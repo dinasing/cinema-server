@@ -7,6 +7,7 @@ import {
   update,
   deleteOne,
   findAll,
+  findMovieTimes,
 } from "../controllers/movie.controller.js";
 
 // Create a new Movie
@@ -18,9 +19,11 @@ router.get("/", findAll);
 // Retrieve a single Movie with id
 router.get("/:id", findOne);
 
-// Update a Movie with id
-router.put("/:id", update);
+// Retrieve all MovieTimes with id
+router.get("/:id/movie-time/", findMovieTimes);
 
+// Update a Movie with id
+router.get("/:id", update);
 // Delete a Movie with id
 router.delete("/:id", deleteOne);
 
