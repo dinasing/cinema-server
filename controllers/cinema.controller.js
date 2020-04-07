@@ -10,9 +10,13 @@ export function create(req, res) {
     return;
   }
 
+  const { title, city, address, description, photo } = req.body;
   const cinema = {
-    title: req.body.title,
-    city: req.body.city,
+    title,
+    city,
+    address,
+    description,
+    photo,
   };
 
   Cinema.create(cinema)
