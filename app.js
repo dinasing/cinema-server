@@ -10,6 +10,8 @@ import cinemaRouter from "./routes/cinema.route";
 import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
 import movieRouter from "./routes/movie.route";
+import movieTimeRouter from "./routes/movieTime.route";
+import cinemaHallRouter from "./routes/cinemaHall.route";
 
 require("./passport.js");
 
@@ -27,5 +29,7 @@ app.use(express.static(join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/cinema", cinemaRouter);
 app.use("/movie", movieRouter);
+app.use("/cinema-hall", cinemaHallRouter);
+app.use("/movie-time", movieTimeRouter);
 app.use("/auth", authRouter);
 app.use("/users", passport.authenticate("jwt", { session: false }), userRouter);
