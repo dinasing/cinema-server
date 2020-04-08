@@ -1,5 +1,7 @@
 import { db } from "../models/index.js";
 const Cinema = db.cinema;
+const Movie = db.movie;
+const MovieTime = db.movieTime;
 
 // Create and Save a new Cinema
 export function create(req, res) {
@@ -58,6 +60,26 @@ exports.findOne = (req, res) => {
     });
 };
 
+exports.findMovieTimes = (req, res) => {
+  const id = req.params.id;
+  MovieTime.findAll({
+    where: { cinemaId: id },
+    include: [
+      {
+        model: Movie,
+        attributes: ["title"],
+      },
+    ],
+  })
+    .then((records) => {
+      res.send(records);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Error retrieving MoviesTimes",
+      });
+    });
+};
 // Update a Cinema by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
