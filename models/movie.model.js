@@ -8,6 +8,7 @@ export function createModel(db, Sequelize) {
     },
     title: {
       type: Sequelize.TEXT,
+      unique: true,
       allowNull: false,
     },
     genre: {
