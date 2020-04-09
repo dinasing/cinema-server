@@ -23,7 +23,7 @@ router.get("/:id", findOne);
 router.get("/:id/movie-time/", findMovieTimes);
 
 // Update a Movie with id
-router.get("/:id", update);
+router.put("/:id", update);
 // Delete a Movie with id
 router.delete("/:id", deleteOne);
 
