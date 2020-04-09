@@ -9,13 +9,19 @@ export function createModel(db, Sequelize) {
     title: {
       type: Sequelize.TEXT,
       allowNull: false,
+      primaryKey: true,
     },
     city: {
+      primaryKey: true,
       type: Sequelize.TEXT,
       allowNull: false,
+      primaryKey: true,
     },
     address: {
+      primaryKey: true,
       type: Sequelize.TEXT,
+      unique: true,
+      primaryKey: true,
     },
     photo: {
       type: Sequelize.TEXT,
