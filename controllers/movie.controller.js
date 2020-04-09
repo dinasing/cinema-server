@@ -7,7 +7,7 @@ const Cinema = db.cinema;
 export function create(req, res) {
   if (!req.body.title) {
     res.status(400).send({
-      message: "Content can not be empty!",
+      msg: "Content can not be empty!",
     });
     return;
   }
@@ -32,11 +32,12 @@ export function create(req, res) {
   };
   Movie.create(movie)
     .then((record) => {
-      res.send(record);
+      if (record.movie) res.send(record.movie.dataValue);
+      else res.send(record);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while adding Movie.",
+        msg: err.message || "Some error occurred while adding Movie.",
       });
     });
 }
