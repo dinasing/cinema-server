@@ -33,3 +33,7 @@ app.use("/cinema-hall", cinemaHallRouter);
 app.use("/movie-time", movieTimeRouter);
 app.use("/auth", authRouter);
 app.use("/users", passport.authenticate("jwt", { session: false }), userRouter);
+
+app.get("*", (req, res) => {
+  res.sendFile(join(__dirname, "public/index.html"));
+});
