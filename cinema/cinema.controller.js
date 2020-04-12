@@ -27,7 +27,7 @@ export function create(req, res) {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while adding Cinema.",
+        msg: err.message || "Some error occurred while adding Cinema.",
       });
     });
 }
@@ -40,7 +40,7 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Error retrieving Cinemas",
+        msg: err.message || "Error retrieving Cinemas",
       });
     });
 };
@@ -55,7 +55,7 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Cinema with id =" + id,
+        msg: "Error retrieving Cinema with id =" + id,
       });
     });
 };
@@ -76,7 +76,7 @@ exports.findMovieTimes = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Error retrieving MoviesTimes",
+        msg: err.message || "Error retrieving MoviesTimes",
       });
     });
 };
@@ -90,17 +90,17 @@ exports.update = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Cinema was updated successfully.",
+          msg: "Cinema was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Cinema with id = ${id}. Maybe Cinema was not found or req.body is empty!`,
+          msg: `Cannot update Cinema with id = ${id}. Maybe Cinema was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Cinema with id =" + id,
+        msg: "Error updating Cinema with id =" + id,
       });
     });
 };
@@ -115,17 +115,17 @@ exports.deleteOne = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Cinema was deleted successfully!",
+          msg: "Cinema was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Cinema with id = ${id}. Maybe Cinema was not found!`,
+          msg: `Cannot delete Cinema with id = ${id}. Maybe Cinema was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Cinema with id = " + id,
+        msg: "Could not delete Cinema with id = " + id,
       });
     });
 };

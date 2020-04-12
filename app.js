@@ -6,18 +6,16 @@ import passport from "passport";
 import cors from "cors";
 
 import indexRouter from "./routes/index";
-import cinemaRouter from "./routes/cinema.route";
+import cinemaRouter from "./cinema/cinema.route";
 import authRouter from "./routes/auth.route";
-import userRouter from "./routes/user.route";
-import movieRouter from "./routes/movie.route";
-import movieTimeRouter from "./routes/movieTime.route";
-import cinemaHallRouter from "./routes/cinemaHall.route";
+import userRouter from "./user/user.route";
+import movieRouter from "./movie/movie.route";
+import movieTimeRouter from "./movieTime/movieTime.route";
+import cinemaHallRouter from "./cinemaHall/cinemaHall.route";
 
 require("./passport.js");
 
 export let app = express();
-
-const db = require("./models/index");
 
 app.use(cors());
 app.use(logger("dev"));
@@ -37,3 +35,4 @@ app.use("/users", passport.authenticate("jwt", { session: false }), userRouter);
 app.get("*", (req, res) => {
   res.sendFile(join(__dirname, "public/index.html"));
 });
+app.get("/favicon.ico", (req, res) => res.status(204));

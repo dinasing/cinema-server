@@ -8,27 +8,23 @@ import {
   deleteOne,
   findAll,
   findMovieTimes,
-} from "../controllers/cinema.controller.js";
+} from "./movie.controller.js";
 
-// Create a new Cinema
+// Create a new Movie
 router.post("/", create);
 
-// Retrieve all Cinemas
+// Retrieve all Movies
 router.get("/", findAll);
 
-// Retrieve a single Cinema with id
+// Retrieve a single Movie with id
 router.get("/:id", findOne);
 
-// Retrieve all MovieTimes for cinema with id
+// Retrieve all MovieTimes with id
 router.get("/:id/movie-time/", findMovieTimes);
 
-// Update a Cinema with id
+// Update a Movie with id
 router.put("/:id", update);
-
-// Delete a Cinema with id
+// Delete a Movie with id
 router.delete("/:id", deleteOne);
-
-// // Create a new Cinema
-// router.delete("/", Cinemas.deleteAll);
 
 export default router;

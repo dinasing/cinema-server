@@ -7,7 +7,7 @@ import {
   update,
   deleteOne,
   findAll,
-} from "../controllers/movieTime.controller.js";
+} from "./cinemaHall.controller.js";
 
 // Create a new Movie
 router.post("/", create);

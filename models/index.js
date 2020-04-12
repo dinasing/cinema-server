@@ -1,10 +1,10 @@
 import Sequelize from "sequelize";
 import config from "config";
-import { createModel as createCinemaModel } from "./cinema.model";
-import { createModel as createUserModel } from "./user.model";
-import { createModel as createMovieModel } from "./movie.model";
-import { createModel as createMovieTimeModel } from "./movieTime.model";
-import { createModel as createCinemaHallModel } from "./cinemaHall.model";
+import { createModel as createCinemaModel } from "../cinema/cinema.model";
+import { createModel as createUserModel } from "../user/user.model";
+import { createModel as createMovieModel } from "../movie/movie.model";
+import { createModel as createMovieTimeModel } from "../movieTime/movieTime.model";
+import { createModel as createCinemaHallModel } from "../cinemaHall/cinemaHall.model";
 // import { createModel as createMovieModel } from "./movie.model";
 
 const sequelize = new Sequelize(config.get("postgresURI"));
