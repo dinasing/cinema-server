@@ -1,109 +1,109 @@
 import { db } from "../models/index.js";
-const CinemaHall = db.cinemaHall;
+const SitType = db.sitType;
 
-// Create and Save a new CinemaHall
+// Create and Save a new SitType
 export function create(req, res) {
-  if (!req.body.title) {
+  if (!req.body.cinemaHallId || !req.body.title || !req.body.numberOfPeople) {
     res.status(400).send({
       msg: "Content can not be empty!",
     });
     return;
   }
 
-  const { title, cinemaId, schema } = req.body;
-  const cinemaHall = {
+  const { title, cinemaHallId, numberOfPeople } = req.body;
+  const sitType = {
     title,
-    cinemaId,
-    schema,
+    cinemaHallId,
+    numberOfPeople,
   };
-  CinemaHall.create(cinemaHall)
+  SitType.create(sitType)
     .then((record) => {
       res.send(record);
     })
     .catch((err) => {
       res.status(500).send({
-        msg: err.message || "Some error occurred while adding CinemaHall.",
+        msg: err.message || "Some error occurred while adding SitType.",
       });
     });
 }
 
-// Retrieve all CinemaHalls from the database.
+// Retrieve all SitTypes from the database.
 exports.findAll = (req, res) => {
-  CinemaHall.findAll()
+  SitType.findAll()
     .then((records) => {
       res.send(records);
     })
     .catch((err) => {
       res.status(500).send({
-        mag: err.message || "Error retrieving CinemaHalls",
+        msg: err.message || "Error retrieving SitTypes",
       });
     });
 };
 
-// Find a single CinemaHall with an id
+// Find a single SitType with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  CinemaHall.findByPk(id)
+  SitType.findByPk(id)
     .then((record) => {
       res.send(record);
     })
     .catch((err) => {
       res.status(500).send({
-        msg: "Error retrieving CinemaHall with id =" + id,
+        msg: "Error retrieving SitType with id =" + id,
       });
     });
 };
 
-// Update a CinemaHall by the id in the request
+// Update a SitType by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  CinemaHall.update(req.body, {
+  SitType.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          mag: "CinemaHall was updated successfully.",
+          msg: "SitType was updated successfully.",
         });
       } else {
         res.send({
-          mag: `Cannot update CinemaHall with id = ${id}. Maybe CinemaHall was not found or req.body is empty!`,
+          msg: `Cannot update SitType with id = ${id}. Maybe SitType was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        msg: "Error updating CinemaHall with id =" + id,
+        msg: "Error updating SitType with id =" + id,
       });
     });
 };
 
-// Delete a CinemaHall with the specified id in the request
+// Delete a SitType with the specified id in the request
 exports.deleteOne = (req, res) => {
   const id = req.params.id;
 
-  CinemaHall.destroy({
+  SitType.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          mag: "CinemaHall was deleted successfully!",
+          msg: "SitType was deleted successfully!",
         });
       } else {
         res.send({
-          mag: `Cannot delete CinemaHall with id = ${id}. Maybe CinemaHall was not found!`,
+          msg: `Cannot delete SitType with id = ${id}. Maybe SitType was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        mag: "Could not delete CinemaHall with id = " + id,
+        msg: "Could not delete SitType with id = " + id,
       });
     });
 };
 
-// Delete all CinemaHalls from the database.
+// Delete all SitTypes from the database.
 exports.deleteAll = (req, res) => {};

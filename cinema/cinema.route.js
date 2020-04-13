@@ -8,6 +8,7 @@ import {
   deleteOne,
   findAll,
   findMovieTimes,
+  findAllWithHalls,
 } from "./cinema.controller.js";
 
 // Create a new Cinema
@@ -15,6 +16,9 @@ router.post("/", create);
 
 // Retrieve all Cinemas
 router.get("/", findAll);
+
+// Retrieve all Cinemas with it's halls
+router.get("/with-halls", findAllWithHalls);
 
 // Retrieve a single Cinema with id
 router.get("/:id", findOne);

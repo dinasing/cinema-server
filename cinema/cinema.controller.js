@@ -2,6 +2,7 @@ import { db } from "../models/index.js";
 const Cinema = db.cinema;
 const Movie = db.movie;
 const MovieTime = db.movieTime;
+const CinemaHall = db.cinemaHall;
 
 // Create and Save a new Cinema
 export function create(req, res) {
@@ -35,6 +36,23 @@ export function create(req, res) {
 // Retrieve all Cinemas from the database.
 exports.findAll = (req, res) => {
   Cinema.findAll()
+    .then((records) => {
+      res.send(records);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        msg: err.message || "Error retrieving Cinemas",
+      });
+    });
+};
+
+// Retrieve all Cinemas with its Halls from the database.
+exports.findAllWithHalls = (req, res) => {
+  Cinema.findAll({
+    include: {
+      model: CinemaHall,
+    },
+  })
     .then((records) => {
       res.send(records);
     })

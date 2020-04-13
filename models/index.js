@@ -5,7 +5,7 @@ import { createModel as createUserModel } from "../user/user.model";
 import { createModel as createMovieModel } from "../movie/movie.model";
 import { createModel as createMovieTimeModel } from "../movieTime/movieTime.model";
 import { createModel as createCinemaHallModel } from "../cinemaHall/cinemaHall.model";
-// import { createModel as createMovieModel } from "./movie.model";
+import { createModel as createSitTypeModel } from "../sitType/sitType.model";
 
 const sequelize = new Sequelize(config.get("postgresURI"));
 
@@ -18,6 +18,17 @@ db.movie = createMovieModel(sequelize, Sequelize);
 db.user = createUserModel(sequelize, Sequelize);
 db.cinemaHall = createCinemaHallModel(sequelize, Sequelize);
 db.movieTime = createMovieTimeModel(sequelize, Sequelize);
+db.sitType = createSitTypeModel(sequelize, Sequelize);
+
+db.cinemaHall.hasMany(db.sitType, {
+  onDelete: "cascade",
+});
+
+db.sitType.belongsTo(db.cinemaHall, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
 
 db.cinema.hasMany(db.cinemaHall, {
   onDelete: "cascade",
