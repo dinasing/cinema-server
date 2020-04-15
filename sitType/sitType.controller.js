@@ -3,60 +3,47 @@ const SitType = db.sitType;
 
 // Create and Save a new SitType
 export function create(req, res) {
-  if (!req.body.cinemaHallId || !req.body.title || !req.body.numberOfPeople) {
+  if (!req.body.title || !req.body.numberOfPeople) {
     res.status(400).send({
-      msg: "Content can not be empty!",
+      msg: "Content can not be empty! ",
     });
     return;
   }
 
-  const { title, cinemaHallId, numberOfPeople } = req.body;
+  const { title, numberOfPeople } = req.body;
   const sitType = {
     title,
-    cinemaHallId,
     numberOfPeople,
   };
   SitType.create(sitType)
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Some error occurred while adding SitType.",
-      });
-    });
+    .catch(next);
 }
 
 // Retrieve all SitTypes from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   SitType.findAll()
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Error retrieving SitTypes",
-      });
-    });
+    .catch(next);
 };
 
 // Find a single SitType with an id
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   const id = req.params.id;
 
   SitType.findByPk(id)
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Error retrieving SitType with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Update a SitType by the id in the request
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   const id = req.params.id;
 
   SitType.update(req.body, {
@@ -73,15 +60,11 @@ exports.update = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Error updating SitType with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete a SitType with the specified id in the request
-exports.deleteOne = (req, res) => {
+exports.deleteOne = (req, res, next) => {
   const id = req.params.id;
 
   SitType.destroy({
@@ -98,12 +81,8 @@ exports.deleteOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Could not delete SitType with id = " + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete all SitTypes from the database.
-exports.deleteAll = (req, res) => {};
+exports.deleteAll = (req, res, next) => {};

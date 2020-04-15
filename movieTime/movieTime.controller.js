@@ -11,7 +11,7 @@ export function create(req, res) {
     !req.body.cinemaId
   ) {
     res.status(400).send({
-      message: "Content can not be empty!",
+      msg: "Content can not be empty!",
     });
     return;
   }
@@ -28,43 +28,31 @@ export function create(req, res) {
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while adding MovieTime.",
-      });
-    });
+    .catch(next);
 }
 
 // Retrieve all MovieTimes from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   MovieTime.findAll()
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error retrieving MovieTimes",
-      });
-    });
+    .catch(next);
 };
 
 // Find a single MovieTime with an id
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   const id = req.params.id;
 
   MovieTime.findByPk(id)
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving MovieTime with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Update a MovieTime by the id in the request
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   const id = req.params.id;
 
   MovieTime.update(req.body, {
@@ -73,23 +61,19 @@ exports.update = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "MovieTime was updated successfully.",
+          msg: "MovieTime was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or req.body is empty!`,
+          msg: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or req.body is empty!`,
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating MovieTime with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete a MovieTime with the specified id in the request
-exports.deleteOne = (req, res) => {
+exports.deleteOne = (req, res, next) => {
   const id = req.params.id;
 
   MovieTime.destroy({
@@ -98,20 +82,16 @@ exports.deleteOne = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "MovieTime was deleted successfully!",
+          msg: "MovieTime was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
+          msg: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Could not delete MovieTime with id = " + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete all MovieTimes from the database.
-exports.deleteAll = (req, res) => {};
+exports.deleteAll = (req, res, next) => {};

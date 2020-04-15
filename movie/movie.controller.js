@@ -35,42 +35,30 @@ export function create(req, res) {
       if (record.movie) res.send(record.movie.dataValue);
       else res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Some error occurred while adding Movie.",
-      });
-    });
+    .catch(next);
 }
 
 // Retrieve all Movies from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   Movie.findAll()
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error retrieving Movies",
-      });
-    });
+    .catch(next);
 };
 
 // Find a single Movie with an id
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   const id = req.params.id;
 
   Movie.findByPk(id)
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving Movie with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
-exports.findMovieTimes = (req, res) => {
+exports.findMovieTimes = (req, res, next) => {
   const id = req.params.id;
   MovieTime.findAll({
     where: { movieId: id },
@@ -84,15 +72,11 @@ exports.findMovieTimes = (req, res) => {
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error retrieving Movies",
-      });
-    });
+    .catch(next);
 };
 
 // Update a Movie by the id in the request
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   const id = req.params.id;
 
   Movie.update(req.body, {
@@ -109,15 +93,11 @@ exports.update = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating Movie with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete a Movie with the specified id in the request
-exports.deleteOne = (req, res) => {
+exports.deleteOne = (req, res, next) => {
   const id = req.params.id;
 
   Movie.destroy({
@@ -134,12 +114,8 @@ exports.deleteOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Could not delete Movie with id = " + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete all Movies from the database.
-exports.deleteAll = (req, res) => {};
+exports.deleteAll = (req, res, next) => {};

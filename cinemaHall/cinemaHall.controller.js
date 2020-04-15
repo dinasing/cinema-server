@@ -20,43 +20,31 @@ export function create(req, res) {
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Some error occurred while adding CinemaHall.",
-      });
-    });
+    .catch(next);
 }
 
 // Retrieve all CinemaHalls from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   CinemaHall.findAll()
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        mag: err.message || "Error retrieving CinemaHalls",
-      });
-    });
+    .catch(next);
 };
 
 // Find a single CinemaHall with an id
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   const id = req.params.id;
 
   CinemaHall.findByPk(id)
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Error retrieving CinemaHall with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Update a CinemaHall by the id in the request
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   const id = req.params.id;
 
   CinemaHall.update(req.body, {
@@ -73,15 +61,11 @@ exports.update = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Error updating CinemaHall with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete a CinemaHall with the specified id in the request
-exports.deleteOne = (req, res) => {
+exports.deleteOne = (req, res, next) => {
   const id = req.params.id;
 
   CinemaHall.destroy({
@@ -98,12 +82,7 @@ exports.deleteOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        mag: "Could not delete CinemaHall with id = " + id,
-      });
-    });
+    .catch(next);
 };
-
 // Delete all CinemaHalls from the database.
-exports.deleteAll = (req, res) => {};
+exports.deleteAll = (req, res, next) => {};

@@ -5,7 +5,7 @@ const MovieTime = db.movieTime;
 const CinemaHall = db.cinemaHall;
 
 // Create and Save a new Cinema
-export function create(req, res) {
+export function create(req, res, next) {
   if (!req.body.title) {
     res.status(400).send({
       message: "Content can not be empty!",
@@ -26,28 +26,20 @@ export function create(req, res) {
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Some error occurred while adding Cinema.",
-      });
-    });
+    .catch(next);
 }
 
 // Retrieve all Cinemas from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   Cinema.findAll()
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Error retrieving Cinemas",
-      });
-    });
+    .catch(next);
 };
 
 // Retrieve all Cinemas with its Halls from the database.
-exports.findAllWithHalls = (req, res) => {
+exports.findAllWithHalls = (req, res, next) => {
   Cinema.findAll({
     include: {
       model: CinemaHall,
@@ -56,29 +48,21 @@ exports.findAllWithHalls = (req, res) => {
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Error retrieving Cinemas",
-      });
-    });
+    .catch(next);
 };
 
 // Find a single Cinema with an id
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   const id = req.params.id;
 
   Cinema.findByPk(id)
     .then((record) => {
       res.send(record);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Error retrieving Cinema with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
-exports.findMovieTimes = (req, res) => {
+exports.findMovieTimes = (req, res, next) => {
   const id = req.params.id;
   MovieTime.findAll({
     where: { cinemaId: id },
@@ -92,14 +76,10 @@ exports.findMovieTimes = (req, res) => {
     .then((records) => {
       res.send(records);
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: err.message || "Error retrieving MoviesTimes",
-      });
-    });
+    .catch(next);
 };
 // Update a Cinema by the id in the request
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   const id = req.params.id;
 
   Cinema.update(req.body, {
@@ -116,15 +96,11 @@ exports.update = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Error updating Cinema with id =" + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete a Cinema with the specified id in the request
-exports.deleteOne = (req, res) => {
+exports.deleteOne = (req, res, next) => {
   const id = req.params.id;
 
   Cinema.destroy({
@@ -141,12 +117,8 @@ exports.deleteOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
-      res.status(500).send({
-        msg: "Could not delete Cinema with id = " + id,
-      });
-    });
+    .catch(next);
 };
 
 // Delete all Cinemas from the database.
-exports.deleteAll = (req, res) => {};
+exports.deleteAll = (req, res, next) => {};
