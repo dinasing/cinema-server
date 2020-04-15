@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import passport from "passport";
 import cors from "cors";
+import errorhandler from "errorhandler";
 
 import indexRouter from "./routes/index";
 import cinemaRouter from "./cinema/cinema.route";
@@ -18,6 +19,7 @@ require("./passport.js");
 
 export let app = express();
 
+app.use(errorhandler());
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
@@ -38,3 +40,13 @@ app.get("*", (req, res) => {
   res.sendFile(join(__dirname, "public/index.html"));
 });
 app.get("/favicon.ico", (req, res) => res.status(204));
+
+app.use((req, res, next) => {
+  const err = new Error("Not Found");
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).send({ msg: err.message });
+});
