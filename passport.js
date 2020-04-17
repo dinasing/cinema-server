@@ -14,24 +14,28 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: "email",
-      passwordField: "password"
+      passwordField: "password",
     },
-    function(email, password, cb) {
-      return User.findOne({ where: { email } })
-        .then(user => {
+    function (email, password, cb) {
+      return User.findOne({
+        where: { email },
+      })
+        .then((user) => {
           return JSON.parse(JSON.stringify(user));
         })
-        .then(user => {
+        .then((user) => {
           if (!user || !bcrypt.compareSync(password, user.password)) {
             return cb(null, false, {
-              message: "Incorrect email or password."
+              message: "Incorrect email or password.",
             });
-          } else
+          } else {
+            delete user.password;
             return cb(null, user, {
-              message: "Logged In Successfully"
+              message: "Logged In Successfully",
             });
+          }
         })
-        .catch(err => {
+        .catch((err) => {
           return cb(err);
         });
     }
@@ -42,16 +46,16 @@ passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-      secretOrKey: config.get("jwtSecret")
+      secretOrKey: config.get("jwtSecret"),
     },
-    function(jwtPayload, cb) {
+    function (jwtPayload, cb) {
       console.log(jwtPayload.id);
 
       return User.findByPk(jwtPayload.id)
-        .then(user => {
+        .then((user) => {
           return cb(null, user);
         })
-        .catch(err => {
+        .catch((err) => {
           return cb(err);
         });
     }
