@@ -3,7 +3,7 @@ const Cinema = db.cinema;
 const Movie = db.movie;
 const MovieTime = db.movieTime;
 const CinemaHall = db.cinemaHall;
-
+import sequelize from "sequelize";
 // Create and Save a new Cinema
 export function create(req, res, next) {
   if (!req.body.title) {
@@ -13,7 +13,7 @@ export function create(req, res, next) {
     return;
   }
 
-  const { title, city, address, description, photo } = req.body;
+  const { title, city, address, description, photo, cinemaHalls } = req.body;
   const cinema = {
     title,
     city,
@@ -21,10 +21,25 @@ export function create(req, res, next) {
     description,
     photo,
   };
-
-  Cinema.create(cinema)
-    .then((record) => {
-      res.send(record);
+  let response;
+  db.sequelize
+    .transaction((t) => {
+      return Cinema.create(cinema, { transaction: t }).then((cinema) => {
+        response = cinema;
+        const cinemaHallsWithCinemaId = cinemaHalls.map((cinemaHall) => {
+          return {
+            title: cinemaHall.title,
+            schema: cinemaHall.schema,
+            cinema_id: cinema.id,
+          };
+        });
+        return CinemaHall.bulkCreate(cinemaHallsWithCinemaId, {
+          transaction: t,
+        });
+      });
+    })
+    .then((records) => {
+      if (records) res.send(cinema);
     })
     .catch(next);
 }
