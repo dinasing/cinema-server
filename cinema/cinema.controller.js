@@ -30,7 +30,7 @@ export function create(req, res, next) {
           return {
             title: cinemaHall.title,
             schema: cinemaHall.schema,
-            cinema_id: cinema.id,
+            cinemaId: cinema.id,
           };
         });
         return CinemaHall.bulkCreate(cinemaHallsWithCinemaId, {
