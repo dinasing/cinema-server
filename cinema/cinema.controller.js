@@ -3,7 +3,7 @@ const Cinema = db.cinema;
 const Movie = db.movie;
 const MovieTime = db.movieTime;
 const CinemaHall = db.cinemaHall;
-import sequelize from "sequelize";
+
 // Create and Save a new Cinema
 export function create(req, res, next) {
   if (!req.body.title) {

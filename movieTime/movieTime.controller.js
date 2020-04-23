@@ -1,5 +1,6 @@
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
+const MovieTimePrice = db.movieTimePrice;
 
 // Create and Save a new MovieTime
 export function create(req, res) {
@@ -8,7 +9,8 @@ export function create(req, res) {
     !req.body.time ||
     !req.body.cinemaHallId ||
     !req.body.movieId ||
-    !req.body.cinemaId
+    !req.body.cinemaId ||
+    !req.body.prices
   ) {
     res.status(400).send({
       msg: "Content can not be empty!",
@@ -16,7 +18,7 @@ export function create(req, res) {
     return;
   }
 
-  const { date, time, cinemaHallId, cinemaId, movieId } = req.body;
+  const { date, time, cinemaHallId, cinemaId, movieId, prices } = req.body;
   const movieTime = {
     date,
     time,
@@ -24,9 +26,22 @@ export function create(req, res) {
     cinemaId,
     movieId,
   };
-  MovieTime.create(movieTime)
-    .then((record) => {
-      res.send(record);
+  db.sequelize
+    .transaction((t) => {
+      return MovieTime.create(movieTime, { transaction: t }).then(
+        (movieTime) => {
+          const pricesWithMovieTimeId = prices.map((price) => {
+            return {
+              amountOfMoney: price.amountOfMoney,
+              sitTypeId: price.sitsTypeId,
+              movieTimeId: movieTime.id,
+            };
+          });
+          return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
+            transaction: t,
+          });
+        }
+      );
     })
     .catch(next);
 }
