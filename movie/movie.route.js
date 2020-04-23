@@ -8,6 +8,7 @@ import {
   deleteOne,
   findAll,
   findMovieTimes,
+  findAllIdsAndTitles,
 } from "./movie.controller.js";
 
 // Create a new Movie
@@ -15,6 +16,9 @@ router.post("/", create);
 
 // Retrieve all Movies
 router.get("/", findAll);
+
+// Retrieve all Movies
+router.get("/for-movie-times", findAllIdsAndTitles);
 
 // Retrieve a single Movie with id
 router.get("/:id", findOne);

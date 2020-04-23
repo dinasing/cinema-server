@@ -4,7 +4,7 @@ const MovieTime = db.movieTime;
 const Cinema = db.cinema;
 
 // Create and Save a new Movie
-export function create(req, res) {
+export function create(req, res, next) {
   if (!req.body.title) {
     res.status(400).send({
       msg: "Content can not be empty!",
@@ -41,6 +41,14 @@ export function create(req, res) {
 // Retrieve all Movies from the database.
 exports.findAll = (req, res, next) => {
   Movie.findAll()
+    .then((records) => {
+      res.send(records);
+    })
+    .catch(next);
+};
+
+exports.findAllIdsAndTitles = (req, res, next) => {
+  Movie.findAll({ attributes: ["id", "title"] })
     .then((records) => {
       res.send(records);
     })
