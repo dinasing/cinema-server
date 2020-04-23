@@ -2,7 +2,7 @@ import { db } from "../models/index.js";
 const SitType = db.sitType;
 
 // Create and Save a new SitType
-export function create(req, res) {
+export function create(req, res, next) {
   if (!req.body.title || !req.body.numberOfPeople) {
     res.status(400).send({
       msg: "Content can not be empty! ",
