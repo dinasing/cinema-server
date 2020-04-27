@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 import config from "config";
 import { create } from "../user/user.controller.js";
+require("../passport");
 
 router.post("/login", function (req, res, next) {
   passport.authenticate("local", { session: false }, (err, user, info) => {
@@ -26,6 +27,10 @@ router.post("/login", function (req, res, next) {
   })(req, res);
 });
 
-router.post("/signup", create);
+router.post(
+  "/signup",
+  passport.authenticate("jwt", { session: false }),
+  create
+);
 
 module.exports = router;

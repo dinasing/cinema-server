@@ -11,8 +11,11 @@ import {
   findAllWithHalls,
 } from "./cinema.controller.js";
 
+import passport from "passport";
+require("../passport");
+
 // Create a new Cinema
-router.post("/", create);
+router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all Cinemas
 router.get("/", findAll);
@@ -27,12 +30,13 @@ router.get("/:id", findOne);
 router.get("/:id/movie-time/", findMovieTimes);
 
 // Update a Cinema with id
-router.put("/:id", update);
+router.put("/:id", passport.authenticate("jwt", { session: false }), update);
 
 // Delete a Cinema with id
-router.delete("/:id", deleteOne);
-
-// // Create a new Cinema
-// router.delete("/", Cinemas.deleteAll);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  deleteOne
+);
 
 export default router;
