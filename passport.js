@@ -49,10 +49,9 @@ passport.use(
       secretOrKey: config.get("jwtSecret"),
     },
     function (jwtPayload, cb) {
-      console.log(jwtPayload.id);
-
       return User.findByPk(jwtPayload.id)
         .then((user) => {
+          delete user.password;
           return cb(null, user);
         })
         .catch((err) => {
