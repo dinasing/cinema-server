@@ -2,8 +2,9 @@ import { db } from "../models/index.js";
 const User = db.user;
 import bcrypt from "bcryptjs";
 
+require("../passport");
 // Create and Save a new User
-export function create(req, res) {
+export function create(req, res, next) {
   const { firstName, lastName, email, password } = req.body;
   if (!email || !firstName || !lastName || !password) {
     res.status(400).send({
@@ -74,6 +75,3 @@ exports.deleteOne = (req, res, next) => {
 
 // Delete all Users from the database.
 exports.deleteAll = (req, res, next) => {};
-
-// Find all published Users
-exports.findAllPublished = (req, res, next) => {};
