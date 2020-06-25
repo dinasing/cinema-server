@@ -51,7 +51,7 @@ passport.use(
     function (jwtPayload, cb) {
       return User.findByPk(jwtPayload.id)
         .then((user) => {
-          delete user.password;
+            console.log(user);
           return cb(null, user);
         })
         .catch((err) => {
