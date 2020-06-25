@@ -27,10 +27,6 @@ router.post("/login", function (req, res, next) {
   })(req, res);
 });
 
-router.post(
-  "/signup",
-  passport.authenticate("jwt", { session: false }),
-  create
-);
+router.post("/signup", create);
 
 module.exports = router;
