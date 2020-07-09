@@ -32,6 +32,18 @@ exports.findAll = (req, res, next) => {
     .catch(next);
 };
 
+// Retrieve all CinemaHalls from the database.
+exports.findAllHallsForCinema = (req, res, next) => {
+  const id = req.params.id;
+  CinemaHall.findAll({
+    where: { cinemaId: id },
+  })
+    .then((records) => {
+      res.send(records);
+    })
+    .catch(next);
+};
+
 // Find a single CinemaHall with an id
 exports.findOne = (req, res, next) => {
   const id = req.params.id;

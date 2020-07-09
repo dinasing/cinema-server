@@ -4,6 +4,7 @@ const MovieTime = db.movieTime;
 const Cinema = db.cinema;
 
 // Create and Save a new Movie
+
 export function create(req, res, next) {
   if (!req.body.title) {
     res.status(400).send({
@@ -97,7 +98,7 @@ exports.update = (req, res, next) => {
         });
       } else {
         res.send({
-          message: `Cannot update Movie with id = ${id}. Maybe Movie was not found or req.body is empty!`,
+          err: `Cannot update Movie with id = ${id}. Maybe Movie was not found or req.body is empty!`,
         });
       }
     })
