@@ -3,7 +3,7 @@ const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
 
 // Create and Save a new MovieTime
-export function create(req, res) {
+export function create(req, res, next) {
   if (
     !req.body.date ||
     !req.body.time ||
