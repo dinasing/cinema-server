@@ -35,8 +35,8 @@ passport.use(
             });
           }
         })
-        .catch((err) => {
-          return cb(err);
+        .catch((error) => {
+          return cb(error);
         });
     }
   )
@@ -51,11 +51,11 @@ passport.use(
     function (jwtPayload, cb) {
       return User.findByPk(jwtPayload.id)
         .then((user) => {
-            console.log(user);
+          console.log(user);
           return cb(null, user);
         })
-        .catch((err) => {
-          return cb(err);
+        .catch((error) => {
+          return cb(error);
         });
     }
   )

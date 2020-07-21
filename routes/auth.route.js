@@ -6,25 +6,25 @@ import config from "config";
 import { create } from "../user/user.controller.js";
 require("../passport");
 
-router.post("/login", function (req, res, next) {
-  passport.authenticate("local", { session: false }, (err, user, info) => {
-    if (err || !user) {
-      return res.status(400).json({
-        msg: info ? info.message : "Login failed",
+router.post("/login", function (request, response, next) {
+  passport.authenticate("local", { session: false }, (error, user, info) => {
+    if (error || !user) {
+      return response.status(400).json({
+        message: info ? info.message : "Login failed",
         user: user,
       });
     }
 
-    req.login(user, { session: false }, (err) => {
-      if (err) {
-        res.send(err);
+    request.login(user, { session: false }, (error) => {
+      if (error) {
+        response.send(error);
       }
 
       const token = jwt.sign(user, config.get("jwtSecret"));
 
-      return res.json({ user, token });
+      return response.json({ user, token });
     });
-  })(req, res);
+  })(request, response);
 });
 
 router.post("/signup", create);

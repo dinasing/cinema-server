@@ -4,11 +4,10 @@ const MovieTime = db.movieTime;
 const Cinema = db.cinema;
 
 // Create and Save a new Movie
-
-export function create(req, res, next) {
-  if (!req.body.title) {
-    res.status(400).send({
-      msg: "Content can not be empty!",
+export function create(request, response, next) {
+  if (!request.body.title) {
+    response.status(400).send({
+      message: "Content can not be empty!",
     });
     return;
   }
@@ -21,7 +20,7 @@ export function create(req, res, next) {
     language,
     description,
     poster,
-  } = req.body;
+  } = request.body;
   const movie = {
     title,
     genre,
@@ -33,42 +32,42 @@ export function create(req, res, next) {
   };
   Movie.create(movie)
     .then((record) => {
-      if (record.movie) res.send(record.movie.dataValue);
-      else res.send(record);
+      if (record.movie) response.send(record.movie.dataValue);
+      else response.send(record);
     })
     .catch(next);
 }
 
 // Retrieve all Movies from the database.
-exports.findAll = (req, res, next) => {
+exports.findAll = (request, response, next) => {
   Movie.findAll()
     .then((records) => {
-      res.send(records);
+      response.send(records);
     })
     .catch(next);
 };
 
-exports.findAllIdsAndTitles = (req, res, next) => {
+exports.findAllIdsAndTitles = (request, response, next) => {
   Movie.findAll({ attributes: ["id", "title"] })
     .then((records) => {
-      res.send(records);
+      response.send(records);
     })
     .catch(next);
 };
 
 // Find a single Movie with an id
-exports.findOne = (req, res, next) => {
-  const id = req.params.id;
+exports.findOne = (request, response, next) => {
+  const id = request.params.id;
 
   Movie.findByPk(id)
     .then((record) => {
-      res.send(record);
+      response.send(record);
     })
     .catch(next);
 };
 
-exports.findMovieTimes = (req, res, next) => {
-  const id = req.params.id;
+exports.findMovieTimes = (request, response, next) => {
+  const id = request.params.id;
   MovieTime.findAll({
     where: { movieId: id },
     include: [
@@ -79,26 +78,26 @@ exports.findMovieTimes = (req, res, next) => {
     ],
   })
     .then((records) => {
-      res.send(records);
+      response.send(records);
     })
     .catch(next);
 };
 
 // Update a Movie by the id in the request
-exports.update = (req, res, next) => {
-  const id = req.params.id;
+exports.update = (request, response, next) => {
+  const id = request.params.id;
 
-  Movie.update(req.body, {
+  Movie.update(request.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
+        response.send({
           message: "Movie was updated successfully.",
         });
       } else {
-        res.send({
-          err: `Cannot update Movie with id = ${id}. Maybe Movie was not found or req.body is empty!`,
+        response.send({
+          error: `Cannot update Movie with id = ${id}. Maybe Movie was not found or request.body is empty!`,
         });
       }
     })
@@ -106,19 +105,19 @@ exports.update = (req, res, next) => {
 };
 
 // Delete a Movie with the specified id in the request
-exports.deleteOne = (req, res, next) => {
-  const id = req.params.id;
+exports.deleteOne = (request, response, next) => {
+  const id = request.params.id;
 
   Movie.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
+        response.send({
           message: "Movie was deleted successfully!",
         });
       } else {
-        res.send({
+        response.send({
           message: `Cannot delete Movie with id = ${id}. Maybe Movie was not found!`,
         });
       }
@@ -127,4 +126,4 @@ exports.deleteOne = (req, res, next) => {
 };
 
 // Delete all Movies from the database.
-exports.deleteAll = (req, res, next) => {};
+exports.deleteAll = (request, response, next) => {};

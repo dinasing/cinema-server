@@ -4,48 +4,48 @@ import bcrypt from "bcryptjs";
 
 require("../passport");
 // Create and Save a new User
-export function create(req, res, next) {
-  const { firstName, lastName, email, password } = req.body;
+export function create(request, response, next) {
+  const { firstName, lastName, email, password } = request.body;
   if (!email || !firstName || !lastName || !password) {
-    res.status(400).send({
-      msg: "Please enter all fields!",
+    response.status(400).send({
+      message: "Please enter all fields!",
     });
     return;
   }
 
-  bcrypt.hash(password, 3, function (err, hash) {
+  bcrypt.hash(password, 3, function (error, hash) {
     const user = {
       firstName,
       lastName,
       email,
       password: hash,
-      roleId: req.body.roleId,
+      roleId: request.body.roleId,
     };
     User.create(user)
       .then((record) => {
-        res.send(record);
+        response.send(record);
       })
       .catch(next);
   });
 }
 
 // Retrieve all Users from the database.
-exports.findAll = (req, res, next) => {};
+exports.findAll = (request, response, next) => {};
 
-exports.update = (req, res, next) => {
-  const id = req.params.id;
+exports.update = (request, response, next) => {
+  const id = request.params.id;
 
-  User.update(req.body, {
+  User.update(request.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
+        response.send({
           message: "User was updated successfully.",
         });
       } else {
-        res.send({
-          message: `Cannot update User with id = ${id}. Maybe User was not found or req.body is empty!`,
+        response.send({
+          message: `Cannot update User with id = ${id}. Maybe User was not found or request.body is empty!`,
         });
       }
     })
@@ -53,19 +53,19 @@ exports.update = (req, res, next) => {
 };
 
 // Delete a User with the specified id in the request
-exports.deleteOne = (req, res, next) => {
-  const id = req.params.id;
+exports.deleteOne = (request, response, next) => {
+  const id = request.params.id;
 
   User.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
+        response.send({
           message: "User was deleted successfully!",
         });
       } else {
-        res.send({
+        response.send({
           message: `Cannot delete User with id = ${id}. Maybe User was not found!`,
         });
       }
@@ -74,4 +74,4 @@ exports.deleteOne = (req, res, next) => {
 };
 
 // Delete all Users from the database.
-exports.deleteAll = (req, res, next) => {};
+exports.deleteAll = (request, response, next) => {};

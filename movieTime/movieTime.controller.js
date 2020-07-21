@@ -3,22 +3,22 @@ const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
 
 // Create and Save a new MovieTime
-export function create(req, res, next) {
+export function create(request, response, next) {
   if (
-    !req.body.date ||
-    !req.body.time ||
-    !req.body.cinemaHallId ||
-    !req.body.movieId ||
-    !req.body.cinemaId ||
-    !req.body.prices
+    !request.body.date ||
+    !request.body.time ||
+    !request.body.cinemaHallId ||
+    !request.body.movieId ||
+    !request.body.cinemaId ||
+    !request.body.prices
   ) {
-    res.status(400).send({
-      msg: "Content can not be empty!",
+    response.status(400).send({
+      message: "Content can not be empty!",
     });
     return;
   }
 
-  const { date, time, cinemaHallId, cinemaId, movieId, prices } = req.body;
+  const { date, time, cinemaHallId, cinemaId, movieId, prices } = request.body;
   const movieTime = {
     date,
     time,
@@ -47,40 +47,40 @@ export function create(req, res, next) {
 }
 
 // Retrieve all MovieTimes from the database.
-exports.findAll = (req, res, next) => {
+exports.findAll = (request, response, next) => {
   MovieTime.findAll()
     .then((records) => {
-      res.send(records);
+      response.send(records);
     })
     .catch(next);
 };
 
 // Find a single MovieTime with an id
-exports.findOne = (req, res, next) => {
-  const id = req.params.id;
+exports.findOne = (request, response, next) => {
+  const id = request.params.id;
 
   MovieTime.findByPk(id)
     .then((record) => {
-      res.send(record);
+      response.send(record);
     })
     .catch(next);
 };
 
 // Update a MovieTime by the id in the request
-exports.update = (req, res, next) => {
-  const id = req.params.id;
+exports.update = (request, response, next) => {
+  const id = request.params.id;
 
-  MovieTime.update(req.body, {
+  MovieTime.update(request.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
-          msg: "MovieTime was updated successfully.",
+        response.send({
+          message: "MovieTime was updated successfully.",
         });
       } else {
-        res.send({
-          msg: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or req.body is empty!`,
+        response.send({
+          message: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or request.body is empty!`,
         });
       }
     })
@@ -88,20 +88,20 @@ exports.update = (req, res, next) => {
 };
 
 // Delete a MovieTime with the specified id in the request
-exports.deleteOne = (req, res, next) => {
-  const id = req.params.id;
+exports.deleteOne = (request, response, next) => {
+  const id = request.params.id;
 
   MovieTime.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
-          msg: "MovieTime was deleted successfully!",
+        response.send({
+          message: "MovieTime was deleted successfully!",
         });
       } else {
-        res.send({
-          msg: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
+        response.send({
+          message: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
         });
       }
     })
@@ -109,4 +109,4 @@ exports.deleteOne = (req, res, next) => {
 };
 
 // Delete all MovieTimes from the database.
-exports.deleteAll = (req, res, next) => {};
+exports.deleteAll = (request, response, next) => {};
