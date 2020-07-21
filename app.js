@@ -13,7 +13,7 @@ import userRouter from "./user/user.route";
 import movieRouter from "./movie/movie.route";
 import movieTimeRouter from "./movieTime/movieTime.route";
 import cinemaHallRouter from "./cinemaHall/cinemaHall.route";
-import sitTypeRouter from "./sitType/sitType.route";
+import seatTypeRouter from "./seatType/seatType.route";
 
 require("./passport.js");
 
@@ -32,7 +32,7 @@ app.use("/cinema", cinemaRouter);
 app.use("/movie", movieRouter);
 app.use("/cinema-hall", cinemaHallRouter);
 app.use("/movie-time", movieTimeRouter);
-app.use("/sit-type", sitTypeRouter);
+app.use("/sit-type", seatTypeRouter);
 app.use("/auth", authRouter);
 app.use("/user", passport.authenticate("jwt", { session: false }), userRouter);
 app.get("/favicon.ico", (req, res) => res.status(204));

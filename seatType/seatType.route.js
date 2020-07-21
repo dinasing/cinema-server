@@ -9,21 +9,21 @@ import {
   update,
   deleteOne,
   findAll,
-} from "./sitType.controller.js";
+} from "./seatType.controller.js";
 
-// Create a new SitType
+// Create a new SeatType
 router.post("/", passport.authenticate("jwt", { session: false }), create);
 
-// Retrieve all SitTypes
+// Retrieve all SeatTypes
 router.get("/", findAll);
 
-// Retrieve a single SitType with id
+// Retrieve a single SeatType with id
 router.get("/:id", findOne);
 
-// Update a SitType with id
+// Update a SeatType with id
 router.put("/:id", passport.authenticate("jwt", { session: false }), update);
 
-// Delete a SitType with id
+// Delete a SeatType with id
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),

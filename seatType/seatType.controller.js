@@ -1,7 +1,7 @@
 import { db } from "../models/index.js";
-const SitType = db.sitType;
+const SeatType = db.seatType;
 
-// Create and Save a new SitType
+// Create and Save a new SeatType
 export function create(req, res, next) {
   if (!req.body.title || !req.body.numberOfPeople) {
     res.status(400).send({
@@ -11,78 +11,78 @@ export function create(req, res, next) {
   }
 
   const { title, numberOfPeople } = req.body;
-  const sitType = {
+  const seatType = {
     title,
     numberOfPeople,
   };
-  SitType.create(sitType)
+  SeatType.create(seatType)
     .then((record) => {
       res.send(record);
     })
     .catch(next);
 }
 
-// Retrieve all SitTypes from the database.
+// Retrieve all SeatTypes from the database.
 exports.findAll = (req, res, next) => {
-  SitType.findAll()
+  SeatType.findAll()
     .then((records) => {
       res.send(records);
     })
     .catch(next);
 };
 
-// Find a single SitType with an id
+// Find a single SeatType with an id
 exports.findOne = (req, res, next) => {
   const id = req.params.id;
 
-  SitType.findByPk(id)
+  SeatType.findByPk(id)
     .then((record) => {
       res.send(record);
     })
     .catch(next);
 };
 
-// Update a SitType by the id in the request
+// Update a SeatType by the id in the request
 exports.update = (req, res, next) => {
   const id = req.params.id;
 
-  SitType.update(req.body, {
+  SeatType.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          msg: "SitType was updated successfully.",
+          msg: "SeatType was updated successfully.",
         });
       } else {
         res.send({
-          msg: `Cannot update SitType with id = ${id}. Maybe SitType was not found or req.body is empty!`,
+          msg: `Cannot update SeatType with id = ${id}. Maybe SeatType was not found or req.body is empty!`,
         });
       }
     })
     .catch(next);
 };
 
-// Delete a SitType with the specified id in the request
+// Delete a SeatType with the specified id in the request
 exports.deleteOne = (req, res, next) => {
   const id = req.params.id;
 
-  SitType.destroy({
+  SeatType.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          msg: "SitType was deleted successfully!",
+          msg: "SeatType was deleted successfully!",
         });
       } else {
         res.send({
-          msg: `Cannot delete SitType with id = ${id}. Maybe SitType was not found!`,
+          msg: `Cannot delete SeatType with id = ${id}. Maybe SeatType was not found!`,
         });
       }
     })
     .catch(next);
 };
 
-// Delete all SitTypes from the database.
+// Delete all SeatTypes from the database.
 exports.deleteAll = (req, res, next) => {};

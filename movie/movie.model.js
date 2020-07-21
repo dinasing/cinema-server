@@ -12,7 +12,7 @@ export function createModel(db, Sequelize) {
       allowNull: false,
     },
     genre: {
-      type: Sequelize.TEXT,
+      type: Sequelize.ARRAY(Sequelize.INTEGER),
       allowNull: false,
     },
     release_date: {

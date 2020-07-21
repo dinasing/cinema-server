@@ -33,7 +33,7 @@ export function create(req, res, next) {
           const pricesWithMovieTimeId = prices.map((price) => {
             return {
               amountOfMoney: price.amountOfMoney,
-              sitTypeId: price.sitsTypeId,
+              seatTypeId: price.seatsTypeId,
               movieTimeId: movieTime.id,
             };
           });
