@@ -35,17 +35,17 @@ app.use("/movie-time", movieTimeRouter);
 app.use("/sit-type", seatTypeRouter);
 app.use("/auth", authRouter);
 app.use("/user", passport.authenticate("jwt", { session: false }), userRouter);
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.get("/favicon.ico", (request, response) => response.status(204));
 
-app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, "public/index.html"));
+app.get("*", (request, response) => {
+  response.sendFile(join(__dirname, "public/index.html"));
 });
 
-app.use((req, res, next) => {
-  const err = new Error("Not Found");
-  err.status = 404;
-  next(err);
+app.use((request, response, next) => {
+  const error = new Error("Not Found");
+  error.status = 404;
+  next(error);
 });
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).send({ msg: err.message });
+app.use((error, request, response, next) => {
+  response.status(error.status || 500).send({ message: error.message });
 });
