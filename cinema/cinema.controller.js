@@ -28,7 +28,7 @@ export function create(request, response, next) {
     description,
     photo,
   };
-  let response;
+
   db.sequelize
     .transaction((t) => {
       return Cinema.create(cinema, { transaction: t }).then((cinema) => {
