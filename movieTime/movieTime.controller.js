@@ -30,13 +30,11 @@ export function create(req, res, next) {
     .transaction((transaction) => {
       return MovieTime.create(movieTime, { transaction: transaction }).then(
         (movieTime) => {
-          const pricesWithMovieTimeId = prices.map((price) => {
-            return {
-              amountOfMoney: price.amountOfMoney,
-              sitTypeId: price.sitsTypeId,
-              movieTimeId: movieTime.id,
-            };
-          });
+          const pricesWithMovieTimeId = prices.map((price) => ({
+            amountOfMoney: price.amountOfMoney,
+            sitTypeId: price.sitsTypeId,
+            movieTimeId: movieTime.id,
+          }));
           return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
             transaction: transaction,
           });
