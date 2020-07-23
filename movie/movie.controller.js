@@ -92,15 +92,13 @@ exports.update = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Movie was updated successfully.",
-        });
-      } else {
-        res.send({
-          err: `Cannot update Movie with id = ${id}. Maybe Movie was not found or req.body is empty!`,
-        });
-      }
+      const message =
+        num == 1
+          ? "Movie was updated successfully!"
+          : `Cannot update Movie with id = ${id}. Maybe movie was not found!`;
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };
@@ -113,15 +111,13 @@ exports.deleteOne = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Movie was deleted successfully!",
-        });
-      } else {
-        res.send({
-          message: `Cannot delete Movie with id = ${id}. Maybe Movie was not found!`,
-        });
-      }
+      const message =
+        num == 1
+          ? "Movie was deleted successfully!"
+          : `Cannot delete Movie with id = ${id}. Maybe movie was not found!`;
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };

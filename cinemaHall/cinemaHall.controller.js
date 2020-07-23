@@ -63,15 +63,13 @@ exports.update = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          mag: "CinemaHall was updated successfully.",
-        });
-      } else {
-        res.send({
-          mag: `Cannot update CinemaHall with id = ${id}. Maybe CinemaHall was not found or req.body is empty!`,
-        });
-      }
+      const message =
+        num == 1
+          ? "Cinema hall was updated successfully!"
+          : `Cannot update Cinema hall with id = ${id}. Maybe Cinema hall was not found!`;
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };
@@ -84,15 +82,13 @@ exports.deleteOne = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          mag: "CinemaHall was deleted successfully!",
-        });
-      } else {
-        res.send({
-          mag: `Cannot delete CinemaHall with id = ${id}. Maybe CinemaHall was not found!`,
-        });
-      }
+      const message =
+        num == 1
+          ? "Cinema hall was deleted successfully!"
+          : `Cannot delete Cinema hall with id = ${id}. Maybe Cinema hall was not found!`;
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };

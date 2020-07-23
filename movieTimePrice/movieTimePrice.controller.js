@@ -28,16 +28,15 @@ exports.update = (req, res, next) => {
   MovieTimePrice.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTimePrice was updated successfully.",
-        });
-      } else {
-        res.send({
-          msg: `Cannot update MovieTimePrice with id = ${id}. Maybe MovieTimePrice was not found or req.body is empty!`,
-        });
-      }
+    .then((number) => {
+      const message =
+        number === 1
+          ? "MovieTimePrice was updated successfully."
+          : `Cannot update MovieTimePrice with id = ${id}. Maybe MovieTimePrice was not found or req.body is empty!`;
+
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };
@@ -50,15 +49,13 @@ exports.deleteOne = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTimePrice was deleted successfully!",
-        });
-      } else {
-        res.send({
-          msg: `Cannot delete MovieTimePrice with id = ${id}. Maybe MovieTimePrice was not found!`,
-        });
-      }
+      const message =
+        num == 1
+          ? "Movie time's price was deleted successfully!"
+          : `Cannot delete Movie time's price with id = ${id}. Maybe price was not found!`;
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };

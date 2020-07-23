@@ -27,8 +27,8 @@ export function create(req, res, next) {
     movieId,
   };
   db.sequelize
-    .transaction((t) => {
-      return MovieTime.create(movieTime, { transaction: t }).then(
+    .transaction((transaction) => {
+      return MovieTime.create(movieTime, { transaction: transaction }).then(
         (movieTime) => {
           const pricesWithMovieTimeId = prices.map((price) => {
             return {
@@ -38,7 +38,7 @@ export function create(req, res, next) {
             };
           });
           return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
-            transaction: t,
+            transaction: transaction,
           });
         }
       );
@@ -74,15 +74,13 @@ exports.update = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTime was updated successfully.",
-        });
-      } else {
-        res.send({
-          msg: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or req.body is empty!`,
-        });
-      }
+      const message =
+        num == 1
+          ? "Movie time was updated successfully!"
+          : `Cannot update Movie time with id = ${id}. Maybe Movie time was not found!`;
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };
@@ -95,15 +93,13 @@ exports.deleteOne = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTime was deleted successfully!",
-        });
-      } else {
-        res.send({
-          msg: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
-        });
-      }
+      const message =
+        num == 1
+          ? "Movie time was deleted successfully!"
+          : `Cannot delete Movie time with id = ${id}. Maybe Movie time was not found!`;
+      res.send({
+        message,
+      });
     })
     .catch(next);
 };
