@@ -32,7 +32,7 @@ app.use("/cinema", cinemaRouter);
 app.use("/movie", movieRouter);
 app.use("/cinema-hall", cinemaHallRouter);
 app.use("/movie-time", movieTimeRouter);
-app.use("/sit-type", seatTypeRouter);
+app.use("/seat-type", seatTypeRouter);
 app.use("/auth", authRouter);
 app.use("/user", passport.authenticate("jwt", { session: false }), userRouter);
 app.get("/favicon.ico", (request, response) => response.status(204));
