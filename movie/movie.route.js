@@ -1,6 +1,4 @@
 import { Router } from "express";
-let router = Router();
-
 import passport from "passport";
 import "../passport";
 
@@ -13,6 +11,8 @@ import {
   findMovieTimes,
   findAllIdsAndTitles,
 } from "./movie.controller.js";
+
+const router = Router();
 
 // Create a new Movie
 router.post("/", passport.authenticate("jwt", { session: false }), create);

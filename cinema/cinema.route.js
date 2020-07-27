@@ -1,6 +1,4 @@
 import { Router } from "express";
-let router = Router();
-
 import {
   create,
   findOne,
@@ -13,6 +11,8 @@ import {
 
 import passport from "passport";
 import "../passport";
+
+const router = Router();
 
 // Create a new Cinema
 router.post("/", passport.authenticate("jwt", { session: false }), create);

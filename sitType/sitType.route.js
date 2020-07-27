@@ -1,5 +1,4 @@
 import { Router } from "express";
-let router = Router();
 import passport from "passport";
 import "../passport";
 
@@ -10,6 +9,8 @@ import {
   deleteOne,
   findAll,
 } from "./sitType.controller.js";
+
+const router = Router();
 
 // Create a new SitType
 router.post("/", passport.authenticate("jwt", { session: false }), create);
