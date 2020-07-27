@@ -1,8 +1,6 @@
 import { Router } from "express";
-let router = Router();
-
 import passport from "passport";
-require("../passport");
+import "../passport";
 
 import {
   create,
@@ -12,6 +10,8 @@ import {
   findAll,
   findAllHallsForCinema,
 } from "./cinemaHall.controller.js";
+
+const router = Router();
 
 // Create a new Hall
 router.post("/", passport.authenticate("jwt", { session: false }), create);

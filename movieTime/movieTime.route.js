@@ -1,8 +1,6 @@
 import { Router } from "express";
-let router = Router();
-
 import passport from "passport";
-require("../passport");
+import "../passport";
 
 import {
   create,
@@ -11,6 +9,8 @@ import {
   deleteOne,
   findAll,
 } from "./movieTime.controller.js";
+
+const router = Router();
 
 // Create a new Movie
 router.post("/", passport.authenticate("jwt", { session: false }), create);

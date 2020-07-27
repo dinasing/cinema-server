@@ -27,18 +27,16 @@ export function create(req, res, next) {
     movieId,
   };
   db.sequelize
-    .transaction((t) => {
-      return MovieTime.create(movieTime, { transaction: t }).then(
+    .transaction((transaction) => {
+      return MovieTime.create(movieTime, { transaction: transaction }).then(
         (movieTime) => {
-          const pricesWithMovieTimeId = prices.map((price) => {
-            return {
-              amountOfMoney: price.amountOfMoney,
-              seatTypeId: price.seatsTypeId,
-              movieTimeId: movieTime.id,
-            };
-          });
+          const pricesWithMovieTimeId = prices.map((price) => ({
+            amountOfMoney: price.amountOfMoney,
+            sitTypeId: price.sitsTypeId,
+            movieTimeId: movieTime.id,
+          }));
           return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
-            transaction: t,
+            transaction: transaction,
           });
         }
       );
@@ -73,16 +71,13 @@ exports.update = (req, res, next) => {
   MovieTime.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTime was updated successfully.",
-        });
-      } else {
-        res.send({
-          msg: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or req.body is empty!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Movie time was updated successfully!"
+            : `Cannot update Movie time with id = ${id}. Maybe Movie time was not found!`,
+      });
     })
     .catch(next);
 };
@@ -94,16 +89,13 @@ exports.deleteOne = (req, res, next) => {
   MovieTime.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTime was deleted successfully!",
-        });
-      } else {
-        res.send({
-          msg: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Movie time was deleted successfully!"
+            : `Cannot delete Movie time with id = ${id}. Maybe Movie time was not found!`,
+      });
     })
     .catch(next);
 };

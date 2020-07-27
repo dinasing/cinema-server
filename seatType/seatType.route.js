@@ -1,7 +1,6 @@
 import { Router } from "express";
-let router = Router();
 import passport from "passport";
-require("../passport");
+import "../passport";
 
 import {
   create,
@@ -11,7 +10,9 @@ import {
   findAll,
 } from "./seatType.controller.js";
 
-// Create a new SeatType
+const router = Router();
+
+// Create a new SitType
 router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all SeatTypes
