@@ -39,12 +39,11 @@ exports.update = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      const message =
-        num == 1
-          ? "User was updated successfully!"
-          : `Cannot update User with id = ${id}. Maybe User was not found!`;
       res.send({
-        message,
+        message:
+          num === 1
+            ? "User was updated successfully!"
+            : `Cannot update User with id = ${id}. Maybe User was not found!`,
       });
     })
     .catch(next);
@@ -58,12 +57,11 @@ exports.deleteOne = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      const message =
-        num == 1
-          ? "User was deleted successfully!"
-          : `Cannot deleted User with id = ${id}. Maybe User was not found!`;
       res.send({
-        message,
+        message:
+          num === 1
+            ? "User was deleted successfully!"
+            : `Cannot deleted User with id = ${id}. Maybe User was not found!`,
       });
     })
     .catch(next);

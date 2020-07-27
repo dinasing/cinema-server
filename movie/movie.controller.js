@@ -91,13 +91,12 @@ exports.update = (req, res, next) => {
   Movie.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      const message =
-        num == 1
-          ? "Movie was updated successfully!"
-          : `Cannot update Movie with id = ${id}. Maybe movie was not found!`;
+    .then((number) => {
       res.send({
-        message,
+        message:
+          number === 1
+            ? "Movie was updated successfully!"
+            : `Cannot update Movie with id = ${id}. Maybe movie was not found!`,
       });
     })
     .catch(next);
@@ -110,13 +109,12 @@ exports.deleteOne = (req, res, next) => {
   Movie.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      const message =
-        num == 1
-          ? "Movie was deleted successfully!"
-          : `Cannot delete Movie with id = ${id}. Maybe movie was not found!`;
+    .then((number) => {
       res.send({
-        message,
+        message:
+          number === 1
+            ? "Movie was deleted successfully!"
+            : `Cannot delete Movie with id = ${id}. Maybe movie was not found!`,
       });
     })
     .catch(next);

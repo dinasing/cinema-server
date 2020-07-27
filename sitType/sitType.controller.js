@@ -49,16 +49,13 @@ exports.update = (req, res, next) => {
   SitType.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        const message =
-          num == 1
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
             ? "SitType was update successfully!"
-            : `Cannot update SitType with id = ${id}. Maybe SitType was not found!`;
-        res.send({
-          message,
-        });
-      }
+            : `Cannot update SitType with id = ${id}. Maybe SitType was not found!`,
+      });
     })
     .catch(next);
 };
@@ -70,13 +67,12 @@ exports.deleteOne = (req, res, next) => {
   SitType.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      const message =
-        num == 1
-          ? "SitType was deleted successfully!"
-          : `Cannot delete SitType with id = ${id}. Maybe SitType was not found!`;
+    .then((number) => {
       res.send({
-        message,
+        message:
+          number === 1
+            ? "SitType was deleted successfully!"
+            : `Cannot delete SitType with id = ${id}. Maybe SitType was not found!`,
       });
     })
     .catch(next);

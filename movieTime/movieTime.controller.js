@@ -71,13 +71,12 @@ exports.update = (req, res, next) => {
   MovieTime.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      const message =
-        num == 1
-          ? "Movie time was updated successfully!"
-          : `Cannot update Movie time with id = ${id}. Maybe Movie time was not found!`;
+    .then((number) => {
       res.send({
-        message,
+        message:
+          number === 1
+            ? "Movie time was updated successfully!"
+            : `Cannot update Movie time with id = ${id}. Maybe Movie time was not found!`,
       });
     })
     .catch(next);
@@ -90,13 +89,12 @@ exports.deleteOne = (req, res, next) => {
   MovieTime.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      const message =
-        num == 1
-          ? "Movie time was deleted successfully!"
-          : `Cannot delete Movie time with id = ${id}. Maybe Movie time was not found!`;
+    .then((number) => {
       res.send({
-        message,
+        message:
+          number === 1
+            ? "Movie time was deleted successfully!"
+            : `Cannot delete Movie time with id = ${id}. Maybe Movie time was not found!`,
       });
     })
     .catch(next);
