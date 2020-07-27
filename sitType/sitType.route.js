@@ -1,5 +1,6 @@
 import { Router } from "express";
-let router = Router();
+import passport from "passport";
+import "../passport";
 
 import {
   create,
@@ -9,8 +10,10 @@ import {
   findAll,
 } from "./sitType.controller.js";
 
+const router = Router();
+
 // Create a new SitType
-router.post("/", create);
+router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all SitTypes
 router.get("/", findAll);
@@ -19,9 +22,13 @@ router.get("/", findAll);
 router.get("/:id", findOne);
 
 // Update a SitType with id
-router.put("/:id", update);
+router.put("/:id", passport.authenticate("jwt", { session: false }), update);
 
 // Delete a SitType with id
-router.delete("/:id", deleteOne);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  deleteOne
+);
 
 export default router;

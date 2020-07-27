@@ -32,6 +32,18 @@ exports.findAll = (req, res, next) => {
     .catch(next);
 };
 
+// Retrieve all CinemaHalls from the database.
+exports.findAllHallsForCinema = (req, res, next) => {
+  const id = req.params.id;
+  CinemaHall.findAll({
+    where: { cinemaId: id },
+  })
+    .then((records) => {
+      res.send(records);
+    })
+    .catch(next);
+};
+
 // Find a single CinemaHall with an id
 exports.findOne = (req, res, next) => {
   const id = req.params.id;
@@ -50,16 +62,13 @@ exports.update = (req, res, next) => {
   CinemaHall.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          mag: "CinemaHall was updated successfully.",
-        });
-      } else {
-        res.send({
-          mag: `Cannot update CinemaHall with id = ${id}. Maybe CinemaHall was not found or req.body is empty!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number == 1
+            ? "Cinema hall was updated successfully!"
+            : `Cannot update Cinema hall with id = ${id}. Maybe Cinema hall was not found!`,
+      });
     })
     .catch(next);
 };
@@ -71,16 +80,13 @@ exports.deleteOne = (req, res, next) => {
   CinemaHall.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          mag: "CinemaHall was deleted successfully!",
-        });
-      } else {
-        res.send({
-          mag: `Cannot delete CinemaHall with id = ${id}. Maybe CinemaHall was not found!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number == 1
+            ? "Cinema hall was deleted successfully!"
+            : `Cannot delete Cinema hall with id = ${id}. Maybe Cinema hall was not found!`,
+      });
     })
     .catch(next);
 };

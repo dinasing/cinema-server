@@ -1,13 +1,14 @@
-const passport = require("passport");
-const passportJWT = require("passport-jwt");
-const bcrypt = require("bcryptjs");
+import passport from "passport";
+import passportJWT from "passport-jwt";
+import bcrypt from "bcryptjs";
 import config from "config";
 import { db } from "./models/index";
 const User = db.user;
 
 const ExtractJWT = passportJWT.ExtractJwt;
 
-const LocalStrategy = require("passport-local").Strategy;
+import { Strategy as LocalStrategy } from "passport-local";
+
 const JWTStrategy = passportJWT.Strategy;
 
 passport.use(
@@ -49,8 +50,6 @@ passport.use(
       secretOrKey: config.get("jwtSecret"),
     },
     function (jwtPayload, cb) {
-      console.log(jwtPayload.id);
-
       return User.findByPk(jwtPayload.id)
         .then((user) => {
           return cb(null, user);

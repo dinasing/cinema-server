@@ -2,8 +2,9 @@ import { db } from "../models/index.js";
 const User = db.user;
 import bcrypt from "bcryptjs";
 
+require("../passport");
 // Create and Save a new User
-export function create(req, res) {
+export function create(req, res, next) {
   const { firstName, lastName, email, password } = req.body;
   if (!email || !firstName || !lastName || !password) {
     res.status(400).send({
@@ -38,15 +39,12 @@ exports.update = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "User was updated successfully.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update User with id = ${id}. Maybe User was not found or req.body is empty!`,
-        });
-      }
+      res.send({
+        message:
+          num === 1
+            ? "User was updated successfully!"
+            : `Cannot update User with id = ${id}. Maybe User was not found!`,
+      });
     })
     .catch(next);
 };
@@ -59,21 +57,15 @@ exports.deleteOne = (req, res, next) => {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "User was deleted successfully!",
-        });
-      } else {
-        res.send({
-          message: `Cannot delete User with id = ${id}. Maybe User was not found!`,
-        });
-      }
+      res.send({
+        message:
+          num === 1
+            ? "User was deleted successfully!"
+            : `Cannot deleted User with id = ${id}. Maybe User was not found!`,
+      });
     })
     .catch(next);
 };
 
 // Delete all Users from the database.
 exports.deleteAll = (req, res, next) => {};
-
-// Find all published Users
-exports.findAllPublished = (req, res, next) => {};

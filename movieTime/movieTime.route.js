@@ -1,5 +1,6 @@
 import { Router } from "express";
-let router = Router();
+import passport from "passport";
+import "../passport";
 
 import {
   create,
@@ -9,8 +10,10 @@ import {
   findAll,
 } from "./movieTime.controller.js";
 
+const router = Router();
+
 // Create a new Movie
-router.post("/", create);
+router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all Movies
 router.get("/", findAll);
@@ -19,9 +22,13 @@ router.get("/", findAll);
 router.get("/:id", findOne);
 
 // Update a Movie with id
-router.put("/:id", update);
+router.put("/:id", passport.authenticate("jwt", { session: false }), update);
 
 // Delete a Movie with id
-router.delete("/:id", deleteOne);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  deleteOne
+);
 
 export default router;
