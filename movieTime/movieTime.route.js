@@ -2,7 +2,7 @@ import { Router } from "express";
 let router = Router();
 
 import passport from "passport";
-require("../passport");
+import "../passport";
 
 import {
   create,

@@ -12,7 +12,7 @@ import {
 } from "./cinema.controller.js";
 
 import passport from "passport";
-require("../passport");
+import "../passport";
 
 // Create a new Cinema
 router.post("/", passport.authenticate("jwt", { session: false }), create);

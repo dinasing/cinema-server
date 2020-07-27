@@ -7,7 +7,8 @@ const User = db.user;
 
 const ExtractJWT = passportJWT.ExtractJwt;
 
-const LocalStrategy = require("passport-local").Strategy;
+import { Strategy as LocalStrategy } from "passport-local";
+
 const JWTStrategy = passportJWT.Strategy;
 
 passport.use(
