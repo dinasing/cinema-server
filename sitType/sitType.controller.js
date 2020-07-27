@@ -2,7 +2,7 @@ import { db } from "../models/index.js";
 const SitType = db.sitType;
 
 // Create and Save a new SitType
-export function create(req, res) {
+export function create(req, res, next) {
   if (!req.body.title || !req.body.numberOfPeople) {
     res.status(400).send({
       msg: "Content can not be empty! ",
@@ -49,16 +49,13 @@ exports.update = (req, res, next) => {
   SitType.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "SitType was updated successfully.",
-        });
-      } else {
-        res.send({
-          msg: `Cannot update SitType with id = ${id}. Maybe SitType was not found or req.body is empty!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "SitType was update successfully!"
+            : `Cannot update SitType with id = ${id}. Maybe SitType was not found!`,
+      });
     })
     .catch(next);
 };
@@ -70,16 +67,13 @@ exports.deleteOne = (req, res, next) => {
   SitType.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "SitType was deleted successfully!",
-        });
-      } else {
-        res.send({
-          msg: `Cannot delete SitType with id = ${id}. Maybe SitType was not found!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "SitType was deleted successfully!"
+            : `Cannot delete SitType with id = ${id}. Maybe SitType was not found!`,
+      });
     })
     .catch(next);
 };

@@ -4,7 +4,8 @@ const MovieTime = db.movieTime;
 const Cinema = db.cinema;
 
 // Create and Save a new Movie
-export function create(req, res) {
+
+export function create(req, res, next) {
   if (!req.body.title) {
     res.status(400).send({
       msg: "Content can not be empty!",
@@ -47,6 +48,14 @@ exports.findAll = (req, res, next) => {
     .catch(next);
 };
 
+exports.findAllIdsAndTitles = (req, res, next) => {
+  Movie.findAll({ attributes: ["id", "title"] })
+    .then((records) => {
+      res.send(records);
+    })
+    .catch(next);
+};
+
 // Find a single Movie with an id
 exports.findOne = (req, res, next) => {
   const id = req.params.id;
@@ -82,16 +91,13 @@ exports.update = (req, res, next) => {
   Movie.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Movie was updated successfully.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update Movie with id = ${id}. Maybe Movie was not found or req.body is empty!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Movie was updated successfully!"
+            : `Cannot update Movie with id = ${id}. Maybe movie was not found!`,
+      });
     })
     .catch(next);
 };
@@ -103,16 +109,13 @@ exports.deleteOne = (req, res, next) => {
   Movie.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Movie was deleted successfully!",
-        });
-      } else {
-        res.send({
-          message: `Cannot delete Movie with id = ${id}. Maybe Movie was not found!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Movie was deleted successfully!"
+            : `Cannot delete Movie with id = ${id}. Maybe movie was not found!`,
+      });
     })
     .catch(next);
 };

@@ -1,14 +1,16 @@
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
+const MovieTimePrice = db.movieTimePrice;
 
 // Create and Save a new MovieTime
-export function create(req, res) {
+export function create(req, res, next) {
   if (
     !req.body.date ||
     !req.body.time ||
     !req.body.cinemaHallId ||
     !req.body.movieId ||
-    !req.body.cinemaId
+    !req.body.cinemaId ||
+    !req.body.prices
   ) {
     res.status(400).send({
       msg: "Content can not be empty!",
@@ -16,7 +18,7 @@ export function create(req, res) {
     return;
   }
 
-  const { date, time, cinemaHallId, cinemaId, movieId } = req.body;
+  const { date, time, cinemaHallId, cinemaId, movieId, prices } = req.body;
   const movieTime = {
     date,
     time,
@@ -24,9 +26,20 @@ export function create(req, res) {
     cinemaId,
     movieId,
   };
-  MovieTime.create(movieTime)
-    .then((record) => {
-      res.send(record);
+  db.sequelize
+    .transaction((transaction) => {
+      return MovieTime.create(movieTime, { transaction: transaction }).then(
+        (movieTime) => {
+          const pricesWithMovieTimeId = prices.map((price) => ({
+            amountOfMoney: price.amountOfMoney,
+            sitTypeId: price.sitsTypeId,
+            movieTimeId: movieTime.id,
+          }));
+          return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
+            transaction: transaction,
+          });
+        }
+      );
     })
     .catch(next);
 }
@@ -58,16 +71,13 @@ exports.update = (req, res, next) => {
   MovieTime.update(req.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTime was updated successfully.",
-        });
-      } else {
-        res.send({
-          msg: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or req.body is empty!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Movie time was updated successfully!"
+            : `Cannot update Movie time with id = ${id}. Maybe Movie time was not found!`,
+      });
     })
     .catch(next);
 };
@@ -79,16 +89,13 @@ exports.deleteOne = (req, res, next) => {
   MovieTime.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          msg: "MovieTime was deleted successfully!",
-        });
-      } else {
-        res.send({
-          msg: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Movie time was deleted successfully!"
+            : `Cannot delete Movie time with id = ${id}. Maybe Movie time was not found!`,
+      });
     })
     .catch(next);
 };

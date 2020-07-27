@@ -34,19 +34,18 @@ app.use("/cinema-hall", cinemaHallRouter);
 app.use("/movie-time", movieTimeRouter);
 app.use("/sit-type", sitTypeRouter);
 app.use("/auth", authRouter);
-app.use("/users", passport.authenticate("jwt", { session: false }), userRouter);
+app.use("/user", passport.authenticate("jwt", { session: false }), userRouter);
+app.get("/favicon.ico", (req, res) => res.status(204));
 
 app.get("*", (req, res) => {
   res.sendFile(join(__dirname, "public/index.html"));
 });
-app.get("/favicon.ico", (req, res) => res.status(204));
 
 app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;
   next(err);
 });
-
 app.use((err, req, res, next) => {
   res.status(err.status || 500).send({ msg: err.message });
 });

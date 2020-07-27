@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 import config from "config";
 import { create } from "../user/user.controller.js";
+require("../passport");
 
 router.post("/login", function (req, res, next) {
   passport.authenticate("local", { session: false }, (err, user, info) => {

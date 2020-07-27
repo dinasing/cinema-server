@@ -1,14 +1,9 @@
-const express = require('express')
-const router = express.Router()
- 
-/* GET users listing. */
-router.get('/', (req, res, next) => {
-  res.send('respond with a resource')
-})
- 
+const express = require("express");
+const router = express.Router();
+
 /* GET user profile */
-router.get('/profile', (req, res, next) => {
-  res.send(req.user)
-})
- 
-module.exports = router
+router.get("/profile", (req, res, next) => {
+  res.send(req.user);
+});
+
+module.exports = router;
