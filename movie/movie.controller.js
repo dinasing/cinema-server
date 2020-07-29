@@ -33,8 +33,7 @@ export function create(req, res, next) {
   };
   Movie.create(movie)
     .then((record) => {
-      if (record.movie) res.send(record.movie.dataValue);
-      else res.send(record);
+      res.send(record.movie ? record.movie.dataValue : record);
     })
     .catch(next);
 }
