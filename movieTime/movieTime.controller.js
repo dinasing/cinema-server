@@ -67,6 +67,10 @@ export function create(request, response, next) {
       }
     })
     .catch(next);
+
+  response.send({
+    message: "Movie time(s) was added successfully.",
+  });
 }
 
 // Retrieve all MovieTimes from the database.
