@@ -46,7 +46,9 @@ export function create(request, response, next) {
       });
     })
     .then((records) => {
-      if (records) response.send(cinema);
+      if (records) {
+        response.send(cinema);
+      }
     })
     .catch(next);
 }
