@@ -65,7 +65,7 @@ exports.update = (req, res, next) => {
     .then((number) => {
       res.send({
         message:
-          number == 1
+          number === 1
             ? "Cinema hall was updated successfully!"
             : `Cannot update Cinema hall with id = ${id}. Maybe Cinema hall was not found!`,
       });
@@ -83,7 +83,7 @@ exports.deleteOne = (req, res, next) => {
     .then((number) => {
       res.send({
         message:
-          number == 1
+          number === 1
             ? "Cinema hall was deleted successfully!"
             : `Cannot delete Cinema hall with id = ${id}. Maybe Cinema hall was not found!`,
       });
