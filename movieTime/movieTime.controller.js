@@ -50,7 +50,7 @@ export function create(request, response, next) {
               (movieTime) => {
                 const pricesWithMovieTimeId = prices.map((price) => {
                   return {
-                    amountOfMoney: price.amountOfMoney,
+                    price: price.amountOfMoney,
                     seatTypeId: price.seatsTypeId,
                     movieTimeId: movieTime.id,
                   };
