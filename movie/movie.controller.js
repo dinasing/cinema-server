@@ -1,7 +1,12 @@
 import { db } from "../models/index.js";
 const Movie = db.movie;
 const MovieTime = db.movieTime;
+const MovieTimePrice = db.movieTimePrice;
 const Cinema = db.cinema;
+import Sequelize from "sequelize";
+import config from "config";
+const sequelize = new Sequelize(config.get("postgresURI"));
+import { QueryTypes } from "sequelize";
 
 // Create and Save a new Movie
 export function create(request, response, next) {
@@ -68,15 +73,28 @@ exports.findOne = (request, response, next) => {
 
 exports.findMovieTimes = (request, response, next) => {
   const id = request.params.id;
-  MovieTime.findAll({
-    where: { movieId: id },
-    include: [
-      {
-        model: Cinema,
-        attributes: ["title"],
-      },
-    ],
-  })
+  sequelize
+    .query(
+      `SELECT date, array_agg(cinemas) as cinemas
+	    FROM (SELECT  date, 
+		  json_build_object('title', title, 'cinemaId', c.id, 'movieTimes',
+				array_agg(json_build_object('id',m.id, 'time', time, 'prices', prices))) as cinemas
+	      FROM public.movie_times m
+	      join cinemas c
+        on "cinemaId"=c.id join 
+         (SELECT m.id as movieTimeId, array_agg(json_build_object('price', price, 'seatTypeId', "seatTypeId")) as prices
+	        FROM public.movie_times m
+	        join movie_time_prices
+	        on "movieTimeId"=m.id	
+	        group by  m.id, time) as mtp	
+		      on movieTimeId=m.id
+	      where   "movieId" = '${id}'
+	      group by date, title, c.id
+	      ORDER BY date) as c
+	    group by date
+	    ORDER BY date`,
+      { plain: false, type: QueryTypes.SELECT }
+    )
     .then((records) => {
       response.send(records);
     })
