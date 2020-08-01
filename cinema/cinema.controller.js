@@ -1,7 +1,9 @@
 import { db } from "../models/index.js";
 const Cinema = db.cinema;
-const Movie = db.movie;
-const MovieTime = db.movieTime;
+import Sequelize from "sequelize";
+import config from "config";
+const sequelize = new Sequelize(config.get("postgresURI"));
+import { QueryTypes } from "sequelize";
 const CinemaHall = db.cinemaHall;
 
 // Create and Save a new Cinema
@@ -84,22 +86,6 @@ exports.findOne = (request, response, next) => {
     .catch(next);
 };
 
-exports.findMovieTimes = (request, response, next) => {
-  const id = request.params.id;
-  MovieTime.findAll({
-    where: { cinemaId: id },
-    include: [
-      {
-        model: Movie,
-        attributes: ["title"],
-      },
-    ],
-  })
-    .then((records) => {
-      response.send(records);
-    })
-    .catch(next);
-};
 // Update a Cinema by the id in the request
 exports.update = (request, response, next) => {
   const id = request.params.id;
@@ -138,6 +124,36 @@ exports.deleteOne = (request, response, next) => {
           message: `Cannot delete Cinema with id = ${id}. Maybe Cinema was not found!`,
         });
       }
+    })
+    .catch(next);
+};
+
+exports.findMovieTimes = (request, response, next) => {
+  const id = request.params.id;
+  sequelize
+    .query(
+      `SELECT date, array_agg(movies) as movies
+	    FROM (SELECT  date, 
+		  json_build_object('title', title, 'movieId', c.id, 'movieTimes',
+				array_agg(json_build_object('id',m.id, 'time', time, 'prices', prices))) as movies
+	      FROM public.movie_times m
+	      join movies c
+        on "movieId"=c.id join 
+         (SELECT m.id as movieTimeId, array_agg(json_build_object('price', price, 'seatTypeId', "seatTypeId")) as prices
+	        FROM public.movie_times m
+	        join movie_time_prices
+	        on "movieTimeId"=m.id	
+	        group by  m.id, time) as mtp	
+		      on movieTimeId=m.id
+	      where   "cinemaId" = '${id}'
+	      group by date, title, c.id
+	      ORDER BY date) as c
+	    group by date
+	    ORDER BY date`,
+      { plain: false, type: QueryTypes.SELECT }
+    )
+    .then((records) => {
+      response.send(records);
     })
     .catch(next);
 };
