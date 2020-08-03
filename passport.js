@@ -36,8 +36,8 @@ passport.use(
             });
           }
         })
-        .catch((err) => {
-          return cb(err);
+        .catch((error) => {
+          return cb(error);
         });
     }
   )
@@ -54,8 +54,8 @@ passport.use(
         .then((user) => {
           return cb(null, user);
         })
-        .catch((err) => {
-          return cb(err);
+        .catch((error) => {
+          return cb(error);
         });
     }
   )

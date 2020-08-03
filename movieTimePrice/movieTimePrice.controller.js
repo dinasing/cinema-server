@@ -2,34 +2,34 @@ import { db } from "../models/index.js";
 const MovieTimePrice = db.movieTime;
 
 // Retrieve all MovieTimePrices from the database.
-exports.findAll = (req, res, next) => {
+exports.findAll = (request, response, next) => {
   MovieTimePrice.findAll()
     .then((records) => {
-      res.send(records);
+      response.send(records);
     })
     .catch(next);
 };
 
 // Find a single MovieTimePrice with an id
-exports.findOne = (req, res, next) => {
-  const id = req.params.id;
+exports.findOne = (request, response, next) => {
+  const id = request.params.id;
 
   MovieTimePrice.findByPk(id)
     .then((record) => {
-      res.send(record);
+      response.send(record);
     })
     .catch(next);
 };
 
 // Update a MovieTimePrice by the id in the request
-exports.update = (req, res, next) => {
-  const id = req.params.id;
+exports.update = (request, response, next) => {
+  const id = request.params.id;
 
-  MovieTimePrice.update(req.body, {
+  MovieTimePrice.update(request.body, {
     where: { id: id },
   })
     .then((number) => {
-      res.send({
+      response.send({
         message:
           number === 1
             ? "MovieTimePrice was updated successfully."
@@ -40,14 +40,14 @@ exports.update = (req, res, next) => {
 };
 
 // Delete a MovieTimePrice with the specified id in the request
-exports.deleteOne = (req, res, next) => {
-  const id = req.params.id;
+exports.deleteOne = (request, response, next) => {
+  const id = request.params.id;
 
   MovieTimePrice.destroy({
     where: { id: id },
   })
     .then((number) => {
-      res.send({
+      response.send({
         message:
           number === 1
             ? "Movie time's price was deleted successfully!"
@@ -58,4 +58,4 @@ exports.deleteOne = (req, res, next) => {
 };
 
 // Delete all MovieTimePrices from the database.
-exports.deleteAll = (req, res, next) => {};
+exports.deleteAll = (request, response, next) => {};

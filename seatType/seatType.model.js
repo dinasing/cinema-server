@@ -1,5 +1,5 @@
 export function createModel(db, Sequelize) {
-  const SitTypes = db.define("sit_type", {
+  const SeatTypes = db.define("seat_type", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -15,5 +15,5 @@ export function createModel(db, Sequelize) {
       allowNull: false,
     },
   });
-  return SitTypes;
+  return SeatTypes;
 }
