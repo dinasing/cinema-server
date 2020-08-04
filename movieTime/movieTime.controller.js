@@ -82,6 +82,18 @@ exports.findAll = (request, response, next) => {
     .catch(next);
 };
 
+exports.findAllForCinema = (request, response, next) => {
+  const id = request.params.id;
+  MovieTime.findAll({
+    where: { cinemaId: id },
+    attributes: ["id", "date", "time", "movieId", "cinemaHallId"],
+  })
+    .then((records) => {
+      response.send(records);
+    })
+    .catch(next);
+};
+
 // Find a single MovieTime with an id
 exports.findOne = (request, response, next) => {
   const id = request.params.id;
