@@ -46,7 +46,9 @@ export function create(request, response, next) {
       });
     })
     .then((records) => {
-      if (records) response.send(cinema);
+      if (records) {
+        response.send(cinema);
+      }
     })
     .catch(next);
 }
@@ -107,16 +109,13 @@ exports.update = (request, response, next) => {
   Cinema.update(request.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          message: "Cinema was updated successfully.",
-        });
-      } else {
-        response.send({
-          message: `Cannot update Cinema with id = ${id}. Maybe Cinema was not found or request.body is empty!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Cinema was updated successfully!"
+            : `Cannot update Cinema with id = ${id}. Maybe Cinema was not found!`,
+      });
     })
     .catch(next);
 };
@@ -128,16 +127,13 @@ exports.deleteOne = (request, response, next) => {
   Cinema.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          message: "Cinema was deleted successfully!",
-        });
-      } else {
-        response.send({
-          message: `Cannot delete Cinema with id = ${id}. Maybe Cinema was not found!`,
-        });
-      }
+    .then((number) => {
+      res.send({
+        message:
+          number === 1
+            ? "Cinema was deleted successfully!"
+            : `Cannot delete Cinema with id = ${id}. Maybe Cinema was not found!`,
+      });
     })
     .catch(next);
 };

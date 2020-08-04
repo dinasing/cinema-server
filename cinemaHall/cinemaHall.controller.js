@@ -62,16 +62,13 @@ exports.update = (request, response, next) => {
   CinemaHall.update(request.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          mag: "CinemaHall was updated successfully.",
-        });
-      } else {
-        response.send({
-          mag: `Cannot update CinemaHall with id = ${id}. Maybe CinemaHall was not found or request.body is empty!`,
-        });
-      }
+    .then((number) => {
+      response.send({
+        message:
+          number === 1
+            ? "Cinema hall was updated successfully!"
+            : `Cannot update Cinema hall with id = ${id}. Maybe Cinema hall was not found!`,
+      });
     })
     .catch(next);
 };
@@ -83,16 +80,13 @@ exports.deleteOne = (request, response, next) => {
   CinemaHall.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          mag: "CinemaHall was deleted successfully!",
-        });
-      } else {
-        response.send({
-          mag: `Cannot delete CinemaHall with id = ${id}. Maybe CinemaHall was not found!`,
-        });
-      }
+    .then((number) => {
+      response.send({
+        message:
+          number === 1
+            ? "Cinema hall was deleted successfully!"
+            : `Cannot delete Cinema hall with id = ${id}. Maybe Cinema hall was not found!`,
+      });
     })
     .catch(next);
 };
