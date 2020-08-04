@@ -135,15 +135,15 @@ exports.findMovieTimes = (request, response, next) => {
       `SELECT date, array_agg(movies) as movies
 	    FROM (SELECT  date, 
 		  json_build_object('title', title, 'movieId', c.id, 'movieTimes',
-				array_agg(json_build_object('id',m.id, 'time', time, 'prices', prices))) as movies
+				array_agg(json_build_object('id',m.id, 'time', time, 'cinemaHallId', m."cinemaHallId", 'prices', prices))) as movies
 	      FROM public.movie_times m
 	      join movies c
         on "movieId"=c.id join 
-         (SELECT m.id as movieTimeId, array_agg(json_build_object('price', price, 'seatTypeId', "seatTypeId")) as prices
+         (SELECT m.id as movieTimeId, m."cinemaHallId", array_agg(json_build_object('price', price, 'seatTypeId', "seatTypeId")) as prices
 	        FROM public.movie_times m
 	        join movie_time_prices
 	        on "movieTimeId"=m.id	
-	        group by  m.id, time) as mtp	
+	        group by  m.id, time, m."cinemaHallId") as mtp	
 		      on movieTimeId=m.id
 	      where   "cinemaId" = '${id}'
 	      group by date, title, c.id
