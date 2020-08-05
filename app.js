@@ -15,7 +15,7 @@ import movieTimeRouter from "./movieTime/movieTime.route";
 import cinemaHallRouter from "./cinemaHall/cinemaHall.route";
 import seatTypeRouter from "./seatType/seatType.route";
 
-import("./passport.js");
+import "./passport.js";
 
 export let app = express();
 
