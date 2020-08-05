@@ -1,3 +1,4 @@
+"use strict";
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
@@ -33,31 +34,30 @@ export async function create(request, response, next) {
 
   let date = start;
 
-  db.sequelize
-    .transaction(() => {
-      while (date >= startDate && date <= endDate) {
-        const movieTime = {
+  const movieTimes = await db.sequelize
+    .transaction(async (transaction) => {
+      while (date >= start && date <= end) {
+        let movieTime = {
           date,
           time,
           cinemaHallId,
           cinemaId,
           movieId,
         };
-        db.sequelize
-          .transaction((transaction) =>
-            MovieTime.create(movieTime, { transaction }).then((movieTime) => {
-              const pricesWithMovieTimeId = prices.map((price) => {
-                return {
-                  price: price.amountOfMoney,
-                  seatTypeId: price.seatsTypeId,
-                  movieTimeId: movieTime.id,
-                };
-              });
-              return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
-                transaction,
-              });
-            })
-          )
+        movieTime = await MovieTime.create(movieTime, { transaction })
+          .then(async (movieTime) => {
+            const pricesWithMovieTimeId = prices.map((price) => {
+              return {
+                price: price.amountOfMoney,
+                seatTypeId: price.seatsTypeId,
+                movieTimeId: movieTime.id,
+              };
+            });
+            await MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
+              transaction,
+            });
+          })
+
           .catch(next);
 
         date = new Date(date.setDate(date.getDate() + 1));
@@ -66,7 +66,7 @@ export async function create(request, response, next) {
     .catch(next);
 
   response.send({
-    message: "Movie time(s) was added successfully.",
+    movieTimes,
   });
 }
 
