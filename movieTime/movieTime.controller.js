@@ -3,7 +3,7 @@ const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
 
 // Create and Save a new MovieTime
-export function create(request, response, next) {
+export async function create(request, response, next) {
   if (
     !request.body.startDate ||
     !request.body.time ||
@@ -44,22 +44,20 @@ export function create(request, response, next) {
           movieId,
         };
         db.sequelize
-          .transaction((transaction) => {
-            return MovieTime.create(movieTime, { transaction }).then(
-              (movieTime) => {
-                const pricesWithMovieTimeId = prices.map((price) => {
-                  return {
-                    price: price.amountOfMoney,
-                    seatTypeId: price.seatsTypeId,
-                    movieTimeId: movieTime.id,
-                  };
-                });
-                return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
-                  transaction,
-                });
-              }
-            );
-          })
+          .transaction((transaction) =>
+            MovieTime.create(movieTime, { transaction }).then((movieTime) => {
+              const pricesWithMovieTimeId = prices.map((price) => {
+                return {
+                  price: price.amountOfMoney,
+                  seatTypeId: price.seatsTypeId,
+                  movieTimeId: movieTime.id,
+                };
+              });
+              return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
+                transaction,
+              });
+            })
+          )
           .catch(next);
 
         date = new Date(date.setDate(date.getDate() + 1));
