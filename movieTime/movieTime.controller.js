@@ -18,21 +18,20 @@ export function create(request, response, next) {
     return;
   }
 
-  let { startDate, endDate } = request.body;
-
-  (startDate = new Date(startDate)), (endDate = new Date(endDate));
-
-  let date = startDate;
-
-  const { time, cinemaHallId, cinemaId, movieId, prices } = request.body;
-
-  const movieTime = {
-    date,
+  const {
     time,
     cinemaHallId,
     cinemaId,
     movieId,
-  };
+    prices,
+    startDate,
+    endDate,
+  } = request.body;
+
+  const start = new Date(startDate),
+    end = new Date(endDate);
+
+  let date = start;
 
   db.sequelize
     .transaction(() => {
