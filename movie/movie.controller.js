@@ -60,6 +60,23 @@ exports.findAllIdsAndTitles = (request, response, next) => {
     .catch(next);
 };
 
+exports.findAllIdsAndTitlesForCinema = (request, response, next) => {
+  const { id } = request.params;
+
+  Movie.findAll({
+    attributes: ["id", "title"],
+    includes: {
+      model: MovieTime,
+      attributes: ["movieId"],
+      where: { cinemaId: id },
+    },
+  })
+    .then((records) => {
+      response.send(records);
+    })
+    .catch(next);
+};
+
 // Find a single Movie with an id
 exports.findOne = (request, response, next) => {
   const id = request.params.id;
