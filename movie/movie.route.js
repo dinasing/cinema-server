@@ -12,6 +12,7 @@ import {
   findAll,
   findMovieTimes,
   findAllIdsAndTitles,
+  findAllIdsAndTitlesForCinema,
 } from "./movie.controller.js";
 
 // Create a new Movie
@@ -19,6 +20,9 @@ router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all Movies
 router.get("/", findAll);
+
+// Retrieve all Movies
+router.get("/cinema/:id", findAllIdsAndTitlesForCinema);
 
 // Retrieve all Movies
 router.get("/for-movie-times", findAllIdsAndTitles);
