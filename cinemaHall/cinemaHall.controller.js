@@ -37,6 +37,7 @@ exports.findAllHallsForCinema = (request, response, next) => {
   const id = request.params.id;
   CinemaHall.findAll({
     where: { cinemaId: id },
+    attributes: ["id", "title"],
   })
     .then((records) => {
       response.send(records);
