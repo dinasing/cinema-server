@@ -1,8 +1,8 @@
 import { db } from "../models/index.js";
 const User = db.user;
 import bcrypt from "bcryptjs";
+import "../passport.js";
 
-import("../passport");
 // Create and Save a new User
 export function create(request, response, next) {
   const { firstName, lastName, email, password } = request.body;
