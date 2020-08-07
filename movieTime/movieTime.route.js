@@ -2,7 +2,7 @@ import { Router } from "express";
 let router = Router();
 
 import passport from "passport";
-require("../passport");
+import "../passport";
 
 import {
   create,
@@ -11,6 +11,7 @@ import {
   deleteOne,
   findAll,
   findAllForCinema,
+  deleteByIds,
 } from "./movieTime.controller.js";
 
 // Create a new Movie
@@ -27,6 +28,12 @@ router.get("/:id", findOne);
 
 // Update a Movie with id
 router.put("/:id", passport.authenticate("jwt", { session: false }), update);
+
+router.delete(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  deleteByIds
+);
 
 // Delete a Movie with id
 router.delete(

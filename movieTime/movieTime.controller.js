@@ -1,6 +1,7 @@
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
+import { Op } from "sequelize";
 
 // Create and Save a new MovieTime
 export function create(request, response, next) {
@@ -112,8 +113,8 @@ exports.update = (request, response, next) => {
   MovieTime.update(request.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
+    .then((number) => {
+      if (number == 1) {
         response.send({
           message: "MovieTime was updated successfully.",
         });
@@ -131,10 +132,10 @@ exports.deleteOne = (request, response, next) => {
   const id = request.params.id;
 
   MovieTime.destroy({
-    where: { id: id },
+    where: { id },
   })
-    .then((num) => {
-      if (num == 1) {
+    .then((number) => {
+      if (number === 1) {
         response.send({
           message: "MovieTime was deleted successfully!",
         });
@@ -147,5 +148,16 @@ exports.deleteOne = (request, response, next) => {
     .catch(next);
 };
 
-// Delete all MovieTimes from the database.
-exports.deleteAll = (request, response, next) => {};
+exports.deleteByIds = (request, response, next) => {
+  const { ids } = request.body;
+
+  MovieTime.destroy({ where: { id: ids } })
+    .then((number) => {
+      if (number === 1) {
+        response.send({
+          message: "MovieTime was deleted successfully!",
+        });
+      }
+    })
+    .catch(next);
+};
