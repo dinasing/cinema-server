@@ -1,7 +1,6 @@
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
-import { Op } from "sequelize";
 
 // Create and Save a new MovieTime
 export function create(request, response, next) {
