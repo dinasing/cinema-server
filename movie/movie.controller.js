@@ -118,6 +118,52 @@ exports.findMovieTimes = (request, response, next) => {
     .catch(next);
 };
 
+exports.findRelevantMovies = (request, response, next) => {
+  const id = request.params.id;
+  sequelize
+    .query(
+      `SELECT distinct m.id, title, release_date, end_date, language, description, poster, genre
+	    FROM public.movies m
+	    join movie_times mt on m.id=mt."movieId"
+	    where date>=CURRENT_DATE`,
+      { plain: false, type: QueryTypes.SELECT }
+    )
+    .then((records) => {
+      response.send(records);
+    })
+    .catch(next);
+};
+
+exports.findRelevantMovieTimes = (request, response, next) => {
+  const id = request.params.id;
+  sequelize
+    .query(
+      `SELECT date, array_agg(cinemas) as cinemas
+	    FROM (SELECT  date, 
+		  json_build_object('title', title, 'cinemaId', c.id, 'movieTimes',
+				array_agg(json_build_object('id',m.id, 'time', time, 'prices', prices))) as cinemas
+	      FROM public.movie_times m
+	      join cinemas c
+        on "cinemaId"=c.id join 
+         (SELECT m.id as movieTimeId, array_agg(json_build_object('price', price, 'seatTypeId', "seatTypeId")) as prices
+	        FROM public.movie_times m
+	        join movie_time_prices
+	        on "movieTimeId"=m.id	
+	        group by  m.id, time) as mtp	
+		      on movieTimeId=m.id
+	      where   "movieId" = '${id}' AND date>=CURRENT_DATE
+	      group by date, title, c.id
+	      ORDER BY date) as c
+	    group by date
+	    ORDER BY date`,
+      { plain: false, type: QueryTypes.SELECT }
+    )
+    .then((records) => {
+      response.send(records);
+    })
+    .catch(next);
+};
+
 // Update a Movie by the id in the request
 exports.update = (request, response, next) => {
   const id = request.params.id;
