@@ -1,6 +1,9 @@
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
+const CinemaHall = db.cinemaHall;
+const Cinema = db.cinema;
+const Movie = db.movie;
 
 // Create and Save a new MovieTime
 export function create(request, response, next) {
@@ -15,6 +18,7 @@ export function create(request, response, next) {
     response.status(400).send({
       message: "Content can not be empty!",
     });
+
     return;
   }
 
@@ -98,7 +102,15 @@ exports.findAllForCinema = (request, response, next) => {
 exports.findOne = (request, response, next) => {
   const id = request.params.id;
 
-  MovieTime.findByPk(id)
+  MovieTime.findByPk(id, {
+    attributes: ["date", "time"],
+    include: [
+      { model: CinemaHall, attributes: ["schema", "title"] },
+      { model: Movie, attributes: ["title", "poster"] },
+      { model: Cinema, attributes: ["title"] },
+      { model: MovieTimePrice, attributes: ["seatTypeId", "price"] },
+    ],
+  })
     .then((record) => {
       response.send(record);
     })
