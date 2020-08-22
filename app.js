@@ -14,6 +14,8 @@ import movieRouter from "./movie/movie.route";
 import movieTimeRouter from "./movieTime/movieTime.route";
 import cinemaHallRouter from "./cinemaHall/cinemaHall.route";
 import seatTypeRouter from "./seatType/seatType.route";
+import bookingTransactionRouter from "./bookingTransaction/bookingTransaction.route";
+import ticketRouter from "./ticket/ticket.route";
 
 require("./passport.js");
 
@@ -34,6 +36,8 @@ app.use("/cinema-hall", cinemaHallRouter);
 app.use("/movie-time", movieTimeRouter);
 app.use("/seat-type", seatTypeRouter);
 app.use("/auth", authRouter);
+app.use("/booking", bookingTransactionRouter);
+app.use("/ticket", ticketRouter);
 app.use("/user", passport.authenticate("jwt", { session: false }), userRouter);
 app.get("/favicon.ico", (request, response) => response.status(204));
 

@@ -7,6 +7,8 @@ import { createModel as createMovieTimeModel } from "../movieTime/movieTime.mode
 import { createModel as createCinemaHallModel } from "../cinemaHall/cinemaHall.model";
 import { createModel as createSeatTypeModel } from "../seatType/seatType.model";
 import { createModel as createMovieTimePriceModel } from "../movieTimePrice/movieTimePrice.model";
+import { createModel as createBookingTransactionModel } from "../bookingTransaction/bookingTransaction.model";
+import { createModel as createTicketModel } from "../ticket/ticket.model";
 
 const sequelize = new Sequelize(config.get("postgresURI"));
 
@@ -21,6 +23,8 @@ db.cinemaHall = createCinemaHallModel(sequelize, Sequelize);
 db.movieTime = createMovieTimeModel(sequelize, Sequelize);
 db.movieTimePrice = createMovieTimePriceModel(sequelize, Sequelize);
 db.seatType = createSeatTypeModel(sequelize, Sequelize);
+db.ticket = createTicketModel(sequelize, Sequelize);
+db.bookingTransaction = createBookingTransactionModel(sequelize, Sequelize);
 
 db.cinemaHall.hasMany(db.seatType, {
   onDelete: "cascade",
@@ -71,6 +75,7 @@ db.movieTimePrice.belongsTo(db.movieTime, {
     primaryKey: true,
   },
 });
+
 db.movieTime.hasMany(db.movieTimePrice, {
   onDelete: "cascade",
 });
@@ -81,7 +86,51 @@ db.movieTimePrice.belongsTo(db.seatType, {
     primaryKey: true,
   },
 });
+
 db.seatType.hasMany(db.movieTimePrice, {
+  onDelete: "cascade",
+});
+
+db.bookingTransaction.belongsTo(db.user, {
+  foreignKey: {
+    allowNull: false,
+    primaryKey: true,
+  },
+});
+
+db.user.hasMany(db.bookingTransaction, {
+  onDelete: "cascade",
+});
+
+db.bookingTransaction.belongsTo(db.movieTime, {
+  foreignKey: {
+    allowNull: false,
+    primaryKey: true,
+  },
+});
+
+db.movieTime.hasMany(db.bookingTransaction, {
+  onDelete: "cascade",
+});
+
+db.ticket.belongsTo(db.seatType, {
+  foreignKey: {
+    allowNull: false,
+    primaryKey: true,
+  },
+});
+
+db.seatType.hasMany(db.ticket, {
+  onDelete: "cascade",
+});
+
+db.ticket.belongsTo(db.bookingTransaction, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
+
+db.bookingTransaction.hasMany(db.ticket, {
   onDelete: "cascade",
 });
 
