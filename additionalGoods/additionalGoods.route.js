@@ -16,7 +16,7 @@ import {
 router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all Goods
-router.get("/", findAll);
+router.get("/:cinemaId", findAll);
 
 // Retrieve a single Goods with id
 router.get("/:id", findOne);
