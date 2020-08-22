@@ -14,7 +14,8 @@ export function create(request, response, next) {
     return;
   }
 
-  const { additionalGoods } = request.body;
+  const { title, cinemaId, description, image } = request.body;
+  const additionalGoods = { title, cinemaId, description, image };
 
   AdditionalGoods.create(additionalGoods)
     .then((record) => {
