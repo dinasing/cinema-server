@@ -1,12 +1,13 @@
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
+const MovieTimeAdditionalGoodsPrice = db.movieTimeAdditionalGoodsPrice;
 const CinemaHall = db.cinemaHall;
 const Cinema = db.cinema;
 const Movie = db.movie;
 
 // Create and Save a new MovieTime
-export function create(request, response, next) {
+export async function create(request, response, next) {
   if (
     !request.body.startDate ||
     !request.body.time ||
@@ -18,53 +19,64 @@ export function create(request, response, next) {
     response.status(400).send({
       message: "Content can not be empty!",
     });
-
     return;
   }
 
-  let { startDate, endDate } = request.body;
-
-  (startDate = new Date(startDate)), (endDate = new Date(endDate));
-
-  let date = startDate;
-
-  const { time, cinemaHallId, cinemaId, movieId, prices } = request.body;
-
-  const movieTime = {
-    date,
+  const {
     time,
     cinemaHallId,
     cinemaId,
     movieId,
-  };
+    prices,
+    startDate,
+    endDate,
+    additionalGoodsPrices,
+  } = request.body;
 
-  db.sequelize
-    .transaction(() => {
-      while (date >= startDate && date <= endDate) {
-        const movieTime = {
+  const start = new Date(startDate),
+    end = new Date(endDate);
+
+  let date = start;
+
+  const movieTimes = await db.sequelize
+    .transaction(async (transaction) => {
+      while (date >= start && date <= end) {
+        let movieTime = {
           date,
           time,
           cinemaHallId,
           cinemaId,
           movieId,
         };
-        db.sequelize
-          .transaction((transaction) => {
-            return MovieTime.create(movieTime, { transaction }).then(
-              (movieTime) => {
-                const pricesWithMovieTimeId = prices.map((price) => {
-                  return {
-                    price: price.amountOfMoney,
-                    seatTypeId: price.seatsTypeId,
-                    movieTimeId: movieTime.id,
-                  };
-                });
-                return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
+        movieTime = await MovieTime.create(movieTime, { transaction })
+          .then(async (movieTime) => {
+            const pricesWithMovieTimeId = prices.map((price) => {
+              return {
+                price: price.amountOfMoney,
+                seatTypeId: price.seatsTypeId,
+                movieTimeId: movieTime.id,
+              };
+            });
+            await MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
+              transaction,
+            });
+            if (additionalGoodsPrices) {
+              const goodsPricesWithMovieTimeId = prices.map((price) => {
+                return {
+                  price: price.amountOfMoney,
+                  additionalGoodsId: price.additionalGoodsId,
+                  movieTimeId: movieTime.id,
+                };
+              });
+              await MovieTimeAdditionalGoodsPrice.bulkCreate(
+                goodsPricesWithMovieTimeId,
+                {
                   transaction,
-                });
-              }
-            );
+                }
+              );
+            }
           })
+
           .catch(next);
 
         date = new Date(date.setDate(date.getDate() + 1));
@@ -73,7 +85,7 @@ export function create(request, response, next) {
     .catch(next);
 
   response.send({
-    message: "Movie time(s) was added successfully.",
+    movieTimes,
   });
 }
 
