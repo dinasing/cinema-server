@@ -61,19 +61,21 @@ export async function create(request, response, next) {
               transaction,
             });
             if (additionalGoodsPrices) {
-              const goodsPricesWithMovieTimeId = prices.map((price) => {
-                return {
-                  price: price.amountOfMoney,
-                  additionalGoodsId: price.additionalGoodsId,
-                  movieTimeId: movieTime.id,
-                };
-              });
+              const goodsPricesWithMovieTimeId = additionalGoodsPrices.map(
+                (price) => {
+                  return {
+                    price: price.amountOfMoney,
+                    additionalGoodId: price.additionalGoodsId,
+                    movieTimeId: movieTime.id,
+                  };
+                }
+              );
               await MovieTimeAdditionalGoodsPrice.bulkCreate(
                 goodsPricesWithMovieTimeId,
                 {
                   transaction,
                 }
-              );
+              ).catch(next);
             }
           })
 
