@@ -8,6 +8,75 @@ const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 const server = createServer(app);
+const io = require("socket.io")(server);
+
+let bookedSeats = [];
+let users = [];
+
+io.on("connection", (socket) => {
+  socket.on("new-user", (userId) => {
+    users[socket.id] = { userId, time: new Date().getTime() };
+  });
+
+  socket.on("get-seats", (movieTimeId) => {
+    socket.join(movieTimeId);
+    bookedSeats[movieTimeId] = bookedSeats[movieTimeId]
+      ? bookedSeats[movieTimeId]
+      : [];
+    socket.emit("booked-seats", bookedSeats[movieTimeId]);
+  });
+
+  socket.on("book-seat", (seat) => {
+    const movieTimeId = seat.movieTimeId;
+    bookedSeats[movieTimeId] = bookedSeats[movieTimeId]
+      ? [...bookedSeats[movieTimeId], seat]
+      : [].push(seat);
+
+    users[socket.id] = !users[socket.id]
+      ? { userId: seat.userId, time: new Date().getTime() }
+      : users[socket.id];
+    setTimeout(() => {
+      bookedSeats[movieTimeId] = bookedSeats[movieTimeId].filter(
+        (bookedSeat) => !(bookedSeat.userId == users[socket.id].userId)
+      );
+      socket.broadcast.to(movieTimeId).emit(
+        "booked-seats",
+        bookedSeats[movieTimeId].filter(
+          (bookedSeat) => bookedSeat.userId !== seat.userId
+        )
+      );
+    }, 300000);
+
+    socket.broadcast.to(movieTimeId).emit(
+      "booked-seats",
+      bookedSeats[movieTimeId].filter(
+        (bookedSeat) => bookedSeat.userId !== seat.userId
+      )
+    );
+  });
+
+  socket.on("delete-seat-from-booked", (seat) => {
+    const movieTimeId = seat.movieTimeId;
+    bookedSeats[movieTimeId] = bookedSeats[movieTimeId].filter(
+      (bookedSeat) =>
+        !(bookedSeat.seat == seat.seat && bookedSeat.row == seat.row)
+    );
+    socket.broadcast.to(movieTimeId).emit(
+      "booked-seats",
+      bookedSeats[movieTimeId].filter(
+        (bookedSeat) => bookedSeat.userId !== seat.userId
+      )
+    );
+  });
+
+  // socket.on("disconnect", () => {
+  //    bookedSeats[movieTimeId] =  bookedSeats[movieTimeId].filter(
+  //     (bookedSeat) => !(bookedSeat.userId == users[socket.id].userId)
+  //   );
+
+  //   socket.broadcast.emit("booked-seats", bookedSeats);
+  // });
+});
 
 server.listen(port);
 server.on("error", onError);
