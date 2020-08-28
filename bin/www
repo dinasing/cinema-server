@@ -68,14 +68,6 @@ io.on("connection", (socket) => {
       )
     );
   });
-
-  // socket.on("disconnect", () => {
-  //    bookedSeats[movieTimeId] =  bookedSeats[movieTimeId].filter(
-  //     (bookedSeat) => !(bookedSeat.userId == users[socket.id].userId)
-  //   );
-
-  //   socket.broadcast.emit("booked-seats", bookedSeats);
-  // });
 });
 
 server.listen(port);
