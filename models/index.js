@@ -11,6 +11,7 @@ import { createModel as createBookingTransactionModel } from "../bookingTransact
 import { createModel as createTicketModel } from "../ticket/ticket.model";
 import { createModel as createAdditionalGoodsModel } from "../additionalGoods/additionalGoods.model";
 import { createModel as createMovieTimeAdditionalGoodsPriceModel } from "../movieTimeAdditionalGoodsPrice/movieTimeAdditionalGoodsPrice.model";
+import { createModel as createPurchasedGoodsModel } from "../purchasedAdditionalGoods/purchasedAdditionalGoods.model";
 
 const sequelize = new Sequelize(config.get("postgresURI"));
 
@@ -32,6 +33,7 @@ db.movieTimeAdditionalGoodsPrice = createMovieTimeAdditionalGoodsPriceModel(
   sequelize,
   Sequelize
 );
+db.purchasedGoods = createPurchasedGoodsModel(sequelize, Sequelize);
 
 db.cinemaHall.hasMany(db.seatType, {
   onDelete: "cascade",
@@ -174,6 +176,28 @@ db.movieTimeAdditionalGoodsPrice.belongsTo(db.additionalGoods, {
 });
 
 db.additionalGoods.hasMany(db.movieTimeAdditionalGoodsPrice, {
+  onDelete: "cascade",
+});
+
+db.purchasedGoods.belongsTo(db.bookingTransaction, {
+  foreignKey: {
+    allowNull: false,
+    primaryKey: true,
+  },
+});
+
+db.bookingTransaction.hasMany(db.purchasedGoods, {
+  onDelete: "cascade",
+});
+
+db.purchasedGoods.belongsTo(db.additionalGoods, {
+  foreignKey: {
+    allowNull: false,
+    primaryKey: true,
+  },
+});
+
+db.additionalGoods.hasMany(db.purchasedGoods, {
   onDelete: "cascade",
 });
 

@@ -5,9 +5,10 @@ const sequelize = new Sequelize(config.get("postgresURI"));
 import { QueryTypes } from "sequelize";
 const Ticket = db.ticket;
 const BookingTransaction = db.bookingTransaction;
+const PurchasedGoods = db.purchasedGoods;
 
 // Create and Save a new BookingTransaction
-export function create(request, response, next) {
+export async function create(request, response, next) {
   if (!request.body) {
     response.status(400).send({
       message: "Content can not be empty!",
@@ -15,18 +16,24 @@ export function create(request, response, next) {
     return;
   }
 
-  const { userId, movieTimeId, selectedSeats } = request.body;
+  const {
+    userId,
+    movieTimeId,
+    seatsPreparedForBooking,
+    additionalGoods,
+  } = request.body;
+
   const bookingTransaction = {
     userId,
     movieTimeId,
   };
-
+  let bookedSeats = [];
   db.sequelize
     .transaction((transaction) => {
       return BookingTransaction.create(bookingTransaction, {
         transaction,
-      }).then((bookingTransaction) => {
-        const tickets = selectedSeats.map((seat) => {
+      }).then(async (bookingTransaction) => {
+        const tickets = seatsPreparedForBooking.map((seat) => {
           return {
             row: seat.row,
             seat: seat.seat,
@@ -34,13 +41,25 @@ export function create(request, response, next) {
             seatTypeId: seat.seatTypeId,
           };
         });
-        return Ticket.bulkCreate(tickets, {
+
+        bookedSeats = await Ticket.bulkCreate(tickets, {
           transaction,
         });
+
+        if (additionalGoods.length > 0) {
+          const purchasedGoods = additionalGoods.map((goods) => {
+            return {
+              additionalGoodId: goods.id,
+              number: goods.number,
+              bookingTransactionId: bookingTransaction.id,
+            };
+          });
+          await PurchasedGoods.bulkCreate(purchasedGoods, { transaction });
+        }
       });
     })
     .then((records) => {
-      if (records) response.send(bookingTransaction);
+      if (records) response.send(bookedSeats);
     })
     .catch(next);
 }

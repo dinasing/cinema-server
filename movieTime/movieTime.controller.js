@@ -1,6 +1,7 @@
 import { db } from "../models/index.js";
 const MovieTime = db.movieTime;
 const MovieTimePrice = db.movieTimePrice;
+const AdditionalGoods = db.additionalGoods;
 const MovieTimeAdditionalGoodsPrice = db.movieTimeAdditionalGoodsPrice;
 const CinemaHall = db.cinemaHall;
 const Cinema = db.cinema;
@@ -117,12 +118,20 @@ exports.findOne = (request, response, next) => {
   const id = request.params.id;
 
   MovieTime.findByPk(id, {
-    attributes: ["date", "time"],
+    attributes: ["id","date", "time"],
     include: [
       { model: CinemaHall, attributes: ["schema", "title"] },
       { model: Movie, attributes: ["title", "poster"] },
       { model: Cinema, attributes: ["title"] },
       { model: MovieTimePrice, attributes: ["seatTypeId", "price"] },
+      {
+        model: MovieTimeAdditionalGoodsPrice,
+        attributes: ["additionalGoodId", "price"],
+        include: {
+          model: AdditionalGoods,
+          attributes: ["title", "description", "image"],
+        },
+      },
     ],
   })
     .then((record) => {
