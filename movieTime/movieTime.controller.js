@@ -5,7 +5,7 @@ const MovieTimePrice = db.movieTimePrice;
 // Create and Save a new MovieTime
 export function create(request, response, next) {
   if (
-    !request.body.date ||
+    !request.body.startDate ||
     !request.body.time ||
     !request.body.cinemaHallId ||
     !request.body.movieId ||
@@ -18,7 +18,14 @@ export function create(request, response, next) {
     return;
   }
 
-  const { date, time, cinemaHallId, cinemaId, movieId, prices } = request.body;
+  let { startDate, endDate } = request.body;
+
+  (startDate = new Date(startDate)), (endDate = new Date(endDate));
+
+  let date = startDate;
+
+  const { time, cinemaHallId, cinemaId, movieId, prices } = request.body;
+
   const movieTime = {
     date,
     time,
@@ -26,22 +33,44 @@ export function create(request, response, next) {
     cinemaId,
     movieId,
   };
+
   db.sequelize
-    .transaction((transaction) => {
-      return MovieTime.create(movieTime, { transaction: transaction }).then(
-        (movieTime) => {
-          const pricesWithMovieTimeId = prices.map((price) => ({
-            amountOfMoney: price.amountOfMoney,
-            sitTypeId: price.sitsTypeId,
-            movieTimeId: movieTime.id,
-          }));
-          return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
-            transaction: transaction,
-          });
-        }
-      );
+    .transaction(() => {
+      while (date >= startDate && date <= endDate) {
+        const movieTime = {
+          date,
+          time,
+          cinemaHallId,
+          cinemaId,
+          movieId,
+        };
+        db.sequelize
+          .transaction((transaction) => {
+            return MovieTime.create(movieTime, { transaction }).then(
+              (movieTime) => {
+                const pricesWithMovieTimeId = prices.map((price) => {
+                  return {
+                    price: price.amountOfMoney,
+                    seatTypeId: price.seatsTypeId,
+                    movieTimeId: movieTime.id,
+                  };
+                });
+                return MovieTimePrice.bulkCreate(pricesWithMovieTimeId, {
+                  transaction,
+                });
+              }
+            );
+          })
+          .catch(next);
+
+        date = new Date(date.setDate(date.getDate() + 1));
+      }
     })
     .catch(next);
+
+  response.send({
+    message: "Movie time(s) was added successfully.",
+  });
 }
 
 // Retrieve all MovieTimes from the database.
