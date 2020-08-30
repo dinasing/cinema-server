@@ -35,9 +35,11 @@ db.seatType.belongsTo(db.cinemaHall, {
 db.cinema.hasMany(db.cinemaHall, {
   onDelete: "cascade",
 });
+
 db.cinema.hasMany(db.movieTime, {
   onDelete: "cascade",
 });
+
 db.cinemaHall.belongsTo(db.cinema, {
   foreignKey: {
     allowNull: false,
@@ -53,11 +55,13 @@ db.movieTime.belongsTo(db.cinema, {
     allowNull: false,
   },
 });
+
 db.movieTime.belongsTo(db.movie, {
   foreignKey: {
     allowNull: false,
   },
 });
+
 db.movieTime.belongsTo(db.cinemaHall, {
   foreignKey: {
     allowNull: false,
@@ -71,6 +75,7 @@ db.movieTimePrice.belongsTo(db.movieTime, {
     primaryKey: true,
   },
 });
+
 db.movieTime.hasMany(db.movieTimePrice, {
   onDelete: "cascade",
 });
@@ -81,6 +86,7 @@ db.movieTimePrice.belongsTo(db.seatType, {
     primaryKey: true,
   },
 });
+
 db.seatType.hasMany(db.movieTimePrice, {
   onDelete: "cascade",
 });

@@ -37,8 +37,7 @@ export function create(request, response, next) {
   };
   Movie.create(movie)
     .then((record) => {
-      if (record.movie) response.send(record.movie.dataValue);
-      else response.send(record);
+      response.send(record.movie ? record.movie.dataValue : record);
     })
     .catch(next);
 }
@@ -108,16 +107,13 @@ exports.update = (request, response, next) => {
   Movie.update(request.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          message: "Movie was updated successfully.",
-        });
-      } else {
-        response.send({
-          error: `Cannot update Movie with id = ${id}. Maybe Movie was not found or request.body is empty!`,
-        });
-      }
+    .then((number) => {
+      response.send({
+        message:
+          number === 1
+            ? "Movie was updated successfully!"
+            : `Cannot update Movie with id = ${id}. Maybe movie was not found!`,
+      });
     })
     .catch(next);
 };
@@ -129,16 +125,13 @@ exports.deleteOne = (request, response, next) => {
   Movie.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          message: "Movie was deleted successfully!",
-        });
-      } else {
-        response.send({
-          message: `Cannot delete Movie with id = ${id}. Maybe Movie was not found!`,
-        });
-      }
+    .then((number) => {
+      response.send({
+        message:
+          number === 1
+            ? "Movie was deleted successfully!"
+            : `Cannot delete Movie with id = ${id}. Maybe movie was not found!`,
+      });
     })
     .catch(next);
 };

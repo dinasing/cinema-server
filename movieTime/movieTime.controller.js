@@ -100,16 +100,13 @@ exports.update = (request, response, next) => {
   MovieTime.update(request.body, {
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          message: "MovieTime was updated successfully.",
-        });
-      } else {
-        response.send({
-          message: `Cannot update MovieTime with id = ${id}. Maybe MovieTime was not found or request.body is empty!`,
-        });
-      }
+    .then((number) => {
+      response.send({
+        message:
+          number === 1
+            ? "Movie time was updated successfully!"
+            : `Cannot update Movie time with id = ${id}. Maybe Movie time was not found!`,
+      });
     })
     .catch(next);
 };
@@ -121,16 +118,13 @@ exports.deleteOne = (request, response, next) => {
   MovieTime.destroy({
     where: { id: id },
   })
-    .then((num) => {
-      if (num == 1) {
-        response.send({
-          message: "MovieTime was deleted successfully!",
-        });
-      } else {
-        response.send({
-          message: `Cannot delete MovieTime with id = ${id}. Maybe MovieTime was not found!`,
-        });
-      }
+    .then((number) => {
+      response.send({
+        message:
+          number === 1
+            ? "Movie time was deleted successfully!"
+            : `Cannot delete Movie time with id = ${id}. Maybe Movie time was not found!`,
+      });
     })
     .catch(next);
 };
