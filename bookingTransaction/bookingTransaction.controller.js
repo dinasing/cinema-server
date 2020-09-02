@@ -3,9 +3,17 @@ import Sequelize from "sequelize";
 import config from "config";
 const sequelize = new Sequelize(config.get("postgresURI"));
 import { QueryTypes } from "sequelize";
-const Ticket = db.ticket;
 const BookingTransaction = db.bookingTransaction;
+const Ticket = db.ticket;
 const PurchasedGoods = db.purchasedGoods;
+const MovieTimePrice = db.movieTimePrice;
+const AdditionalGoodsPrice = db.movieTimeAdditionalGoodsPrice;
+const MovieTime = db.movieTime;
+const Movie = db.movie;
+const Cinema = db.cinema;
+const CinemaHall = db.cinemaHall;
+const SeatType = db.seatType;
+const AdditionalGoods = db.additionalGoods;
 
 // Create and Save a new BookingTransaction
 export async function create(request, response, next) {
@@ -70,6 +78,48 @@ exports.findAll = (request, response, next) => {
   BookingTransaction.findAll({
     where: { movieTimeId },
     include: { model: Ticket },
+  })
+    .then((records) => {
+      response.send(records);
+    })
+    .catch(next);
+};
+
+exports.findAllForUser = (request, response, next) => {
+  const { userId } = request.params;
+
+  BookingTransaction.findAll({
+    attributes: [],
+    include: [
+      {
+        model: Ticket,
+        attributes: ["row", "seat", "seatTypeId"],
+        include: { model: SeatType, attributes: ["title"] },
+      },
+      {
+        model: MovieTime,
+        attributes: ["date", "time"],
+        include: [
+          {
+            model: MovieTimePrice,
+            attributes: ["price", "seatTypeId"],
+          },
+          {
+            model: AdditionalGoodsPrice,
+            attributes: ["price", "additionalGoodId"],
+          },
+          { model: Movie, attributes: ["title"] },
+          { model: Cinema, attributes: ["title"] },
+          { model: CinemaHall, attributes: ["title"] },
+        ],
+      },
+      {
+        model: PurchasedGoods,
+        attributes: ["additionalGoodId", "number"],
+        include: { model: AdditionalGoods, attributes: ["title"] },
+      },
+    ],
+    where: { userId },
   })
     .then((records) => {
       response.send(records);
