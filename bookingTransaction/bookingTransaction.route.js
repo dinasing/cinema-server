@@ -9,6 +9,7 @@ import {
   findAll,
   findMovieTimes,
   findAllWithHalls,
+  findAllForUser,
 } from "./bookingTransaction.controller.js";
 
 import passport from "passport";
@@ -19,6 +20,9 @@ router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all BookingTransactions
 router.get("/:movieTimeId", findAll);
+
+// Retrieve all BookingTransactions for user
+router.get("/user/:userId", findAllForUser);
 
 // Retrieve a single BookingTransaction with id
 router.get("/:id", findOne);
