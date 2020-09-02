@@ -22,7 +22,11 @@ router.post("/", passport.authenticate("jwt", { session: false }), create);
 router.get("/:movieTimeId", findAll);
 
 // Retrieve all BookingTransactions for user
-router.get("/user/:userId", findAllForUser);
+router.get(
+  "/user/:userId",
+  passport.authenticate("jwt", { session: false }),
+  findAllForUser
+);
 
 // Retrieve a single BookingTransaction with id
 router.get("/:id", findOne);
