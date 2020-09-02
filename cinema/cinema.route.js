@@ -9,6 +9,7 @@ import {
   findAll,
   findMovieTimes,
   findAllWithHalls,
+  findRelevantMovieTimes,
 } from "./cinema.controller.js";
 
 import passport from "passport";
@@ -19,6 +20,9 @@ router.post("/", passport.authenticate("jwt", { session: false }), create);
 
 // Retrieve all Cinemas
 router.get("/", findAll);
+
+// Retrieve all MovieTimes with id
+router.get("/:id/relevant-movie-time/", findRelevantMovieTimes);
 
 // Retrieve all Cinemas with it's halls
 router.get("/with-halls", findAllWithHalls);
