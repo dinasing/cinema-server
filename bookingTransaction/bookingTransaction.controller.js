@@ -95,6 +95,7 @@ exports.findAllForUser = (request, response, next) => {
         model: Ticket,
         attributes: ["row", "seat", "seatTypeId"],
         include: { model: SeatType, attributes: ["title"] },
+        required: true,
       },
       {
         model: MovieTime,
